@@ -1,0 +1,5 @@
+import {createClient} from '@/lib/supabase/server';
+import {PageHead,Stat,Empty} from '@/components/ui'
+export default async function Page(){const s=await createClient();
+const {data}=await s.from('schedule_revision_history').select('id,change_type,reason,created_at,profiles!schedule_revision_history_changed_by_fkey(full_name),schedules(title)').order('created_at',{ascending:false});
+return <><PageHead eyebrow="AUDITABILITY" title="Revision History" description="Permanent history of schedule revisions, reasons, actors, and version transitions."/><div className="stats-grid"><Stat label="Revision Events" value={data?.length||0}/></div><div className="panel">{data?.length?<table className="data-table"><thead><tr><th>Schedule</th><th>Change</th><th>Reason</th><th>Changed By</th><th>Date</th></tr></thead><tbody>{data.map((x:any)=><tr key={x.id}><td>{x.schedules?.[0]?.title||'Schedule'}</td><td>{x.change_type}</td><td>{x.reason}</td><td>{x.profiles?.[0]?.full_name||'—'}</td><td>{new Date(x.created_at).toLocaleString('en-PH')}</td></tr>)}</tbody></table>:<Empty text="No revision history yet."/>}</div></>}
