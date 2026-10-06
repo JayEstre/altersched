@@ -1,0 +1,23 @@
+import { requireRole } from '@/lib/auth/require-role'
+import { createClient } from '@/lib/supabase/server'
+import { DataTable } from '@/components/data-table'
+import { PageHead, Stat, Empty, Badge } from '@/components/ui'
+import { createAcademicYear, createSemester, setAcademicYearActive, setSemesterActive } from './actions'
+
+type SP=Promise<{success?:string;error?:string}>
+export default async function Page({searchParams}:{searchParams:SP}){
+  await requireRole(['super_admin']); const p=await searchParams; const s=await createClient()
+  const [{data:institutions},{data:years},{data:semesters}]=await Promise.all([
+    s.from('institutions').select('id,name,short_name,is_active').eq('is_active',true).order('name'),
+    s.from('academic_years').select('id,institution_id,name,start_date,end_date,is_active').order('start_date',{ascending:false}),
+    s.from('semesters').select('id,academic_year_id,name,term_order,start_date,end_date,is_active').order('start_date',{ascending:false}),
+  ])
+  const activeYear=years?.find((x:any)=>x.is_active), activeSemester=semesters?.find((x:any)=>x.is_active)
+  return <><PageHead eyebrow="ADMIN MASTER DATA" title="School Year & Semester" description="Administrators maintain the official scheduling period. Department, program, and curriculum maintenance are not part of the active scheduling workflow."/>
+  <div className="stats-grid"><Stat label="Active School Year" value={activeYear?.name||'None'}/><Stat label="Active Semester" value={activeSemester?.name||'None'}/></div>
+  {p.success&&<div className="form-alert success">Saved successfully.</div>}{p.error&&<div className="form-alert error">Unable to save. Check the required fields and date range.</div>}
+  <div className="master-builder-layout"><section className="panel"><p className="eyebrow">SCHOOL YEAR</p><h2>Create School Year</h2><form className="form" action={createAcademicYear}><label>Institution<select name="institution_id" required defaultValue=""><option value="" disabled>Select institution</option>{(institutions||[]).map((x:any)=><option key={x.id} value={x.id}>{x.short_name||x.name}</option>)}</select></label><label>Name<input name="name" required placeholder="2026-2027"/></label><label>Start date<input type="date" name="start_date" required/></label><label>End date<input type="date" name="end_date" required/></label><label className="check-row"><input type="checkbox" name="is_active"/> Set as active School Year</label><button className="btn btn-primary">Create School Year</button></form></section>
+  <section className="panel"><p className="eyebrow">SEMESTER</p><h2>Create Semester</h2><form className="form" action={createSemester}><label>School Year<select name="academic_year_id" required defaultValue=""><option value="" disabled>Select School Year</option>{(years||[]).map((x:any)=><option key={x.id} value={x.id}>{x.name}</option>)}</select></label><label>Name<input name="name" required placeholder="1st Semester"/></label><label>Term order<input type="number" min="1" name="term_order" required defaultValue="1"/></label><label>Start date<input type="date" name="start_date" required/></label><label>End date<input type="date" name="end_date" required/></label><label className="check-row"><input type="checkbox" name="is_active"/> Set as active Semester</label><button className="btn btn-primary">Create Semester</button></form></section></div>
+  <section className="panel"><h2>Configured Scheduling Periods</h2>{years?.length?<DataTable><thead><tr><th>School Year</th><th>Dates</th><th>Status</th><th>Action</th></tr></thead><tbody>{years.map((x:any)=><tr key={x.id}><td>{x.name}</td><td>{x.start_date} — {x.end_date}</td><td><Badge tone={x.is_active?'success':'default'}>{x.is_active?'Active':'Inactive'}</Badge></td><td>{!x.is_active&&<form action={setAcademicYearActive}><input type="hidden" name="academic_year_id" value={x.id}/><button className="btn btn-outline">Set Active</button></form>}</td></tr>)}</tbody></DataTable>:<Empty text="No School Years configured."/>}</section>
+  <section className="panel"><h2>Semesters</h2>{semesters?.length?<DataTable><thead><tr><th>Semester</th><th>Dates</th><th>Status</th><th>Action</th></tr></thead><tbody>{semesters.map((x:any)=><tr key={x.id}><td>{x.name}</td><td>{x.start_date} — {x.end_date}</td><td><Badge tone={x.is_active?'success':'default'}>{x.is_active?'Active':'Inactive'}</Badge></td><td>{!x.is_active&&<form action={setSemesterActive}><input type="hidden" name="semester_id" value={x.id}/><button className="btn btn-outline">Set Active</button></form>}</td></tr>)}</tbody></DataTable>:<Empty text="No Semesters configured."/>}</section></>
+}
