@@ -1,0 +1,8 @@
+node_modules
+.next
+package-lock.json
+/database
+/docs
+/public
+*.md
+next-env.d.ts

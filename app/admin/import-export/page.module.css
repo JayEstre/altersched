@@ -1,0 +1,551 @@
+.scope {
+  display: contents;
+}
+
+.scope :global(.page) {
+  display: grid;
+  gap: 16px;
+  padding-bottom: 32px;
+}
+
+.scope :global(.pageHeader h1) {
+  margin: 4px 0 5px;
+  color: #0f172a;
+  font-size: 27px;
+}
+
+.scope :global(.pageHeader p),
+.scope :global(.cardHeader p),
+.scope :global(.flowCard p) {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.scope :global(.eyebrow) {
+  color: #2563eb;
+  font-size: 10.5px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.scope :global(.eyebrow.green) {
+  color: #15803d;
+}
+
+.scope :global(.eyebrow.red) {
+  color: #b91c1c;
+}
+
+.scope :global(.card),
+.scope :global(.flowCard),
+.scope :global(.result) {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.03),
+    0 8px 22px rgba(15, 23, 42, 0.025);
+}
+
+.scope :global(.mainGrid) {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.15fr)
+    minmax(300px, 0.85fr);
+  gap: 16px;
+}
+
+.scope :global(.card) {
+  padding: 18px;
+}
+
+.scope :global(.cardHeader) {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 15px;
+}
+
+.scope :global(.cardHeader h2),
+.scope :global(.flowCard h2),
+.scope :global(.result h2) {
+  margin: 4px 0 5px;
+  color: #0f172a;
+  font-size: 17px;
+}
+
+.scope :global(.badge) {
+  border-radius: 999px;
+  padding: 5px 9px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 10.5px;
+  font-weight: 900;
+}
+
+.scope :global(.uploadForm) {
+  display: grid;
+  gap: 12px;
+}
+
+.scope :global(.uploadBox) {
+  position: relative;
+  display: flex;
+  min-height: 100px;
+  align-items: center;
+  gap: 12px;
+  border: 1.5px dashed #93c5fd;
+  border-radius: 12px;
+  padding: 18px;
+  background: #f8fbff;
+  cursor: pointer;
+}
+
+.scope :global(.uploadBox:hover) {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.scope :global(.uploadBox input) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.scope :global(.uploadIcon) {
+  display: grid;
+  width: 45px;
+  height: 45px;
+  flex: 0 0 45px;
+  place-items: center;
+  border-radius: 10px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.scope :global(.uploadText) {
+  display: grid;
+  gap: 3px;
+}
+
+.scope :global(.uploadText strong) {
+  color: #0f172a;
+  font-size: 12px;
+}
+
+.scope :global(.uploadText span) {
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.scope :global(.formats) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.scope :global(.formatBadge) {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  padding: 5px 7px;
+}
+
+.scope :global(.formatBadge strong) {
+  color: #2563eb;
+  font-size: 10.5px;
+}
+
+.scope :global(.formatBadge span) {
+  color: var(--muted);
+  font-size: 10.5px;
+}
+
+.scope :global(.infoBox) {
+  border: 1px solid #bfdbfe;
+  border-radius: 9px;
+  padding: 10px 12px;
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+.scope :global(.infoBox strong) {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 11.5px;
+}
+
+.scope :global(.infoBox p) {
+  margin: 0;
+  font-size: 10.5px;
+  line-height: 1.5;
+}
+
+.scope :global(.primaryButton) {
+  min-height: 40px;
+  border: 0;
+  border-radius: 9px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.scope :global(.primaryButton:hover) {
+  background: #1d4ed8;
+}
+
+.scope :global(.steps) {
+  display: grid;
+  gap: 6px;
+}
+
+.scope :global(.step) {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 9px;
+}
+
+.scope :global(.stepNumber) {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: 8px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 10.5px;
+  font-weight: 900;
+}
+
+.scope :global(.step strong) {
+  display: block;
+  color: #0f172a;
+  font-size: 11.5px;
+}
+
+.scope :global(.step p) {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 10.5px;
+  line-height: 1.4;
+}
+
+.scope :global(.connector) {
+  width: 1px;
+  height: 6px;
+  margin-left: 16px;
+  background: #dbeafe;
+}
+
+.scope :global(.ruleGrid),
+.scope :global(.dataGrid) {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.scope :global(.rule),
+.scope :global(.dataType) {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.scope :global(.dataType) {
+  background: #fafafa;
+}
+
+.scope :global(.ruleIcon) {
+  display: grid;
+  width: 27px;
+  height: 27px;
+  margin-bottom: 8px;
+  place-items: center;
+  border-radius: 7px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 11.5px;
+  font-weight: 900;
+}
+
+.scope :global(.rule strong),
+.scope :global(.dataType strong) {
+  display: block;
+  margin-bottom: 3px;
+  color: #0f172a;
+  font-size: 11.5px;
+}
+
+.scope :global(.rule p),
+.scope :global(.dataType p) {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10.5px;
+  line-height: 1.45;
+}
+
+.scope :global(.templateButton),
+.scope :global(.smallButton) {
+  border: 1px solid #dbeafe;
+  border-radius: 8px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 10.5px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.scope :global(.templateButton) {
+  padding: 8px 10px;
+  white-space: nowrap;
+}
+
+.scope :global(.flowCard) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px;
+}
+
+.scope :global(.flow) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+.scope :global(.flow span) {
+  border: 1px solid #dbeafe;
+  border-radius: 7px;
+  padding: 6px 8px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 10.5px;
+  font-weight: 900;
+}
+
+.scope :global(.flow b) {
+  color: var(--muted-2);
+  font-size: 10.5px;
+}
+
+.scope :global(.result) {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+}
+
+.scope :global(.result.success) {
+  border-color: #bbf7d0;
+  background: #f7fff9;
+}
+
+.scope :global(.result.error) {
+  border-color: #fecaca;
+  background: #fffafa;
+}
+
+.scope :global(.resultIcon) {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  place-items: center;
+  border-radius: 9px;
+  background: #dcfce7;
+  color: #15803d;
+  font-weight: 900;
+}
+
+.scope :global(.result.error .resultIcon) {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.scope :global(.resultContent) {
+  width: 100%;
+  min-width: 0;
+}
+
+.scope :global(.resultTop) {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.scope :global(.result p) {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10.5px;
+  line-height: 1.5;
+}
+
+.scope :global(.totalChanges) {
+  min-width: 100px;
+  border: 1px solid #bbf7d0;
+  border-radius: 9px;
+  padding: 8px 10px;
+  background: #fff;
+}
+
+.scope :global(.totalChanges strong) {
+  display: block;
+  color: #15803d;
+  font-size: 18px;
+}
+
+.scope :global(.totalChanges span) {
+  color: var(--muted);
+  font-size: 10.5px;
+}
+
+.scope :global(.resultStats) {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.scope :global(.resultStat) {
+  border: 1px solid #dcfce7;
+  border-radius: 8px;
+  padding: 7px 8px;
+  background: #fff;
+}
+
+.scope :global(.resultStat.warning) {
+  border-color: #fde68a;
+  background: #fffbeb;
+}
+
+.scope :global(.resultStat strong) {
+  display: block;
+  color: #166534;
+  font-size: 14px;
+}
+
+.scope :global(.resultStat.warning strong) {
+  color: #b45309;
+}
+
+.scope :global(.resultStat span) {
+  color: var(--muted);
+  font-size: 10.5px;
+}
+
+.scope :global(.reviewNotice) {
+  margin-top: 10px;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  padding: 9px 10px;
+  background: #fffbeb;
+}
+
+.scope :global(.reviewNotice strong) {
+  display: block;
+  margin-bottom: 2px;
+  color: #92400e;
+  font-size: 10.5px;
+}
+
+.scope :global(.reviewNotice p) {
+  color: #a16207;
+}
+
+.scope :global(.resultActions) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.scope :global(.smallButton) {
+  padding: 6px 8px;
+}
+
+@media (max-width: 1000px) {
+  .scope :global(.mainGrid) {
+    grid-template-columns: 1fr;
+  }
+
+  .scope :global(.ruleGrid),
+  .scope :global(.dataGrid) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .scope :global(.flowCard),
+  .scope :global(.resultTop) {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .scope :global(.resultStats) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .scope :global(.card),
+  .scope :global(.flowCard),
+  .scope :global(.result) {
+    border-radius: 11px;
+    padding: 14px;
+  }
+
+  .scope :global(.cardHeader) {
+    flex-direction: column;
+  }
+
+  .scope :global(.ruleGrid),
+  .scope :global(.dataGrid),
+  .scope :global(.resultStats) {
+    grid-template-columns: 1fr;
+  }
+
+  .scope :global(.templateButton) {
+    width: 100%;
+    text-align: center;
+  }
+
+  .scope :global(.result) {
+    flex-direction: column;
+  }
+
+  .scope :global(.totalChanges) {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+.scope :global(.upload-row) {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 4px 0 18px;
+}
+
+.scope :global(.upload-field) {
+  display: grid;
+  gap: 6px;
+  flex: 1 1 260px;
+}
+
+.scope :global(.import-complete-card) {
+  border-color: var(--success);
+}

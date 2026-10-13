@@ -1,0 +1,50 @@
+.scope {
+  display: contents;
+}
+
+.scope :global(.list-stack) {
+  display: grid;
+  gap: 12px;
+}
+
+.scope :global(.list-row) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fbfcfe;
+}
+
+.scope :global(.list-row-title) {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-soft);
+  margin-bottom: 3px;
+}
+
+.scope :global(.list-row-meta) {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.scope :global(.list-card) {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.scope :global(.list-card-head) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.scope :global(.list-card-meta) {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}

@@ -1,0 +1,136 @@
+/* Monday–Saturday week grid (components/weekly-timetable.tsx). */
+
+.scroller {
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.grid {
+  display: grid;
+  min-width: 720px;
+}
+
+.corner,
+.dayHead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  border-bottom: 1px solid var(--line);
+  background: #f8fbff;
+}
+
+.dayHead {
+  display: grid;
+  gap: 1px;
+  padding: 9px 10px;
+  border-left: 1px solid var(--line);
+  text-align: center;
+}
+
+.dayHead strong {
+  color: var(--text);
+  font-size: 13px;
+}
+
+.dayHead span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.times {
+  position: relative;
+}
+
+.times span {
+  position: absolute;
+  right: 8px;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: 10.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.times span:first-child {
+  transform: translateY(2px);
+}
+
+.dayColumn {
+  position: relative;
+  border-left: 1px solid var(--line);
+  background-image: linear-gradient(to bottom, #edf2f7 1px, transparent 1px);
+}
+
+.session {
+  position: absolute;
+  display: grid;
+  align-content: start;
+  gap: 1px;
+  overflow: hidden;
+  padding: 5px 8px;
+  border: 1px solid;
+  border-left-width: 4px;
+  border-radius: 8px;
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.session strong {
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.session span {
+  overflow: hidden;
+  color: var(--text-soft);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.session .time {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.lecture {
+  border-color: #bfdbfe;
+  border-left-color: #2563eb;
+  background: #eff6ff;
+  color: #1e3a8a;
+}
+
+.lab {
+  border-color: #ddd6fe;
+  border-left-color: #7c3aed;
+  background: #f5f3ff;
+  color: #4c1d95;
+}
+
+.other {
+  border-color: var(--line-strong);
+  border-left-color: var(--muted);
+  background: #f8fafc;
+  color: var(--text);
+}
+
+.alert {
+  border-color: #fecaca;
+  border-left-color: #dc2626;
+  background: #fef2f2;
+  color: #7f1d1d;
+}
+
+.empty {
+  padding: 28px 16px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 12px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}

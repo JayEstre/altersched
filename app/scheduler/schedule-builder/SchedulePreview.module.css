@@ -1,0 +1,456 @@
+.scope {
+  display: contents;
+}
+
+.scope :global(.faculty-scope-note) {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.scope :global(.schedule-preview-panel) {
+  margin-top: 18px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 18px rgba(15, 43, 75, 0.05);
+}
+
+.scope :global(.preview-toolbar) {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px;
+  border-bottom: 1px solid var(--line);
+  background: #f8fbff;
+}
+
+.scope :global(.preview-heading) {
+  min-width: 0;
+}
+
+.scope :global(.preview-kicker) {
+  color: var(--accent);
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.scope :global(.preview-toolbar h2) {
+  margin: 5px 0;
+  color: var(--text);
+  font-size: 19px;
+}
+
+.scope :global(.preview-toolbar p) {
+  max-width: 700px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.scope :global(.preview-summary) {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.scope :global(.preview-summary-card) {
+  min-width: 90px;
+  padding: 8px 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.scope :global(.preview-summary-card span) {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--muted);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.scope :global(.preview-summary-card strong) {
+  color: var(--text);
+  font-size: 16px;
+}
+
+.scope :global(.preview-summary-card.success) {
+  border-color: #a7f3d0;
+}
+
+.scope :global(.preview-summary-card.success strong) {
+  color: #047857;
+}
+
+.scope :global(.preview-summary-card.danger) {
+  border-color: #fecaca;
+}
+
+.scope :global(.preview-summary-card.danger strong) {
+  color: #b91c1c;
+}
+
+.scope :global(.preview-summary-card.warning) {
+  border-color: #fde68a;
+}
+
+.scope :global(.preview-summary-card.warning strong) {
+  color: #b45309;
+}
+
+.scope :global(.preview-legend) {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 9px 18px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.scope :global(.preview-legend span) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.scope :global(.preview-legend i) {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.scope :global(.dot-clear) {
+  background: #22c55e;
+}
+
+.scope :global(.dot-conflict) {
+  background: #ef4444;
+}
+
+.scope :global(.dot-unsaved) {
+  background: #f59e0b;
+}
+
+.scope :global(.preview-message) {
+  margin: 12px 18px 0;
+  padding: 9px 11px;
+  border-radius: 7px;
+  font-size: 11px;
+}
+
+.scope :global(.preview-message.success) {
+  border: 1px solid #a7f3d0;
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.scope :global(.preview-message.warning) {
+  border: 1px solid #fde68a;
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.scope :global(.preview-message.error) {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.scope :global(.schedule-sheet-wrap) {
+  overflow: auto;
+  max-height: 650px;
+}
+
+.scope :global(.schedule-sheet) {
+  width: 100%;
+  min-width: 1100px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 11px;
+}
+
+.scope :global(.schedule-sheet th) {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  padding: 9px 10px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line-strong);
+  background: #f1f5fa;
+  color: #475569;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.scope :global(.schedule-sheet td) {
+  padding: 7px 8px;
+  border-right: 1px solid #edf2f7;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+.scope :global(.schedule-sheet tbody tr:nth-child(even)) {
+  background: #fbfcfe;
+}
+
+.scope :global(.schedule-row-conflict) {
+  background: #fff5f5 !important;
+}
+
+.scope :global(.status-cell) {
+  min-width: 135px;
+}
+
+.scope :global(.row-status) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 800;
+}
+
+.scope :global(.row-status i) {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.scope :global(.row-status.clear) {
+  color: #047857;
+}
+
+.scope :global(.row-status.clear i) {
+  background: #22c55e;
+}
+
+.scope :global(.row-status.conflict) {
+  color: #b91c1c;
+}
+
+.scope :global(.row-status.conflict i) {
+  background: #ef4444;
+}
+
+.scope :global(.conflict-list) {
+  display: flex;
+  margin-top: 4px;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 190px;
+  color: #b91c1c;
+  font-size: 10.5px;
+  line-height: 1.3;
+}
+
+.scope :global(.subject-cell) {
+  min-width: 175px;
+}
+
+.scope :global(.subject-cell strong) {
+  display: block;
+  color: var(--accent);
+  font-size: 11.5px;
+}
+
+.scope :global(.subject-cell span) {
+  display: block;
+  max-width: 210px;
+  margin-top: 2px;
+  overflow: hidden;
+  color: var(--text-soft);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scope :global(.block-chip),
+.scope :global(.session-chip) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 23px;
+  padding: 0 7px;
+  border-radius: 6px;
+  font-size: 10.5px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.scope :global(.block-chip) {
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.scope :global(.session-chip.lecture) {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.scope :global(.session-chip.lab) {
+  background: #f5f3ff;
+  color: #6d28d9;
+}
+
+.scope :global(.sheet-control) {
+  min-height: 32px;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  outline: none;
+  background: #fff;
+  color: var(--text);
+  font: inherit;
+}
+
+.scope :global(.sheet-control:focus) {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(29, 95, 174, 0.15);
+}
+
+.scope :global(select.sheet-control) {
+  padding: 0 26px 0 8px;
+}
+
+.scope :global(input.sheet-control) {
+  padding: 0 7px;
+}
+
+.scope :global(.day-control) {
+  width: 92px;
+}
+
+.scope :global(.time-control) {
+  width: 118px;
+}
+
+.scope :global(.room-control) {
+  width: 155px;
+}
+
+.scope :global(.faculty-control) {
+  width: 195px;
+}
+
+.scope :global(.preview-footer) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  border-top: 1px solid var(--line);
+  background: #f8fbff;
+}
+
+.scope :global(.preview-footer-status) {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.scope :global(.preview-footer-status strong) {
+  display: block;
+  color: var(--text);
+  font-size: 11px;
+}
+
+.scope :global(.preview-footer-status p) {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.scope :global(.footer-icon) {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 28px;
+  border-radius: 50%;
+  font-weight: 900;
+}
+
+.scope :global(.footer-icon.success) {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.scope :global(.footer-icon.danger) {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.scope :global(.preview-actions) {
+  display: flex;
+  gap: 8px;
+}
+
+.scope :global(.preview-button) {
+  min-height: 35px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 11.5px;
+  font-weight: 800;
+}
+
+.scope :global(.preview-button:disabled) {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.scope :global(.preview-button.secondary) {
+  border: 1px solid var(--line-strong);
+  background: #fff;
+  color: var(--text-soft);
+}
+
+.scope :global(.preview-button.primary) {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+@media (max-width: 1000px) {
+  .scope :global(.preview-toolbar) {
+    flex-direction: column;
+  }
+
+  .scope :global(.preview-summary) {
+    width: 100%;
+  }
+
+  .scope :global(.preview-summary-card) {
+    flex: 1;
+  }
+}
+
+@media (max-width: 760px) {
+  .scope :global(.preview-summary) {
+    flex-direction: column;
+  }
+
+  .scope :global(.preview-footer) {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .scope :global(.preview-actions) {
+    width: 100%;
+  }
+
+  .scope :global(.preview-button) {
+    flex: 1;
+  }
+}

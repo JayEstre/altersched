@@ -1,0 +1,204 @@
+.scope {
+  display: contents;
+}
+
+.scope :global(.builder-nav) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.scope :global(.builder-nav-actions) {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.scope :global(.builder-workspace),
+.scope :global(.builder-drafts),
+.scope :global(.builder-generator),
+.scope :global(.builder-empty) {
+  margin-top: 16px;
+}
+
+.scope :global(.builder-workspace-head),
+.scope :global(.builder-section-head) {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.scope :global(.builder-workspace-head h2),
+.scope :global(.builder-section-head h3) {
+  margin: 4px 0;
+}
+
+.scope :global(.builder-workspace-head p),
+.scope :global(.builder-section-head p) {
+  margin: 0;
+  max-width: 760px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.scope :global(.builder-workspace-badges) {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.scope :global(.builder-revision-note) {
+  display: grid;
+  gap: 3px;
+  margin-top: 10px;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.scope :global(.builder-revision-note span) {
+  color: var(--muted);
+}
+
+.scope :global(.builder-flow) {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.scope :global(.builder-flow span) {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 8px;
+  font-size: 11.5px;
+}
+
+.scope :global(.builder-flow b) {
+  color: var(--muted);
+}
+
+.scope :global(.draft-grid) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.scope :global(.draft-card) {
+  display: grid;
+  gap: 4px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 10px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.scope :global(.draft-card:hover),
+.scope :global(.draft-card.selected) {
+  border-color: currentColor;
+}
+
+.scope :global(.draft-card-head) {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.scope :global(.draft-card > span) {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.scope :global(.draft-card small) {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+
+.scope :global(.generator-form) {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.scope :global(.generator-field) {
+  display: grid;
+  gap: 5px;
+}
+
+.scope :global(.generator-field label) {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.scope :global(.generator-field input),
+.scope :global(.generator-field select) {
+  width: 100%;
+  min-height: 38px;
+}
+
+.scope :global(.generator-info) {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 3px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 10px;
+  font-size: 11px;
+}
+
+.scope :global(.generator-info span) {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.scope :global(.generator-actions) {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 760px) {
+  .scope :global(.generator-form) {
+    grid-template-columns: 1fr;
+  }
+
+  .scope :global(.generator-actions) {
+    justify-content: stretch;
+  }
+
+  .scope :global(.generator-actions .btn) {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 560px) {
+  .scope :global(.builder-nav-actions) {
+    width: 100%;
+  }
+
+  .scope :global(.builder-nav-actions .btn) {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .scope :global(.draft-grid) {
+    grid-template-columns: 1fr;
+  }
+}

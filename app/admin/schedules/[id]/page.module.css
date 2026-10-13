@@ -1,0 +1,196 @@
+.scope {
+  display: contents;
+}
+
+.scope :global(.badge-row) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.scope :global(.head-gap) {
+  margin-bottom: 18px;
+}
+
+.scope :global(.split-head-tight) {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.scope :global(.tight-text) {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.scope :global(.flush) {
+  margin: 0;
+}
+
+.scope :global(.fact-grid) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.scope :global(.detail-note) {
+  margin-top: 14px;
+  margin-bottom: 0;
+}
+
+.scope :global(.action-bar) {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.scope :global(.split-head) {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.scope :global(.gap-16) {
+  margin-top: 16px;
+}
+
+.scope :global(.share-card) {
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.scope :global(.field-caption) {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.scope :global(.share-code) {
+  display: block;
+  font-size: 26px;
+  letter-spacing: 0.1em;
+  word-break: break-word;
+}
+
+.scope :global(.share-hint) {
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+.scope :global(.share-body) {
+  margin-top: 12px;
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.scope :global(.qr-image) {
+  background: #fff;
+  border-radius: 8px;
+}
+
+.scope :global(.grow) {
+  min-width: 0;
+  flex: 1;
+}
+
+.scope :global(.share-link) {
+  display: block;
+  margin: 6px 0;
+  word-break: break-all;
+}
+
+.scope :global(.block-note) {
+  display: block;
+  margin-top: 6px;
+}
+
+.scope :global(.gap-12) {
+  margin-top: 12px;
+}
+
+.scope :global(.detail-panel) {
+  margin-top: 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.scope :global(.detail-text) {
+  margin-top: 7px;
+  margin-bottom: 0;
+}
+
+.scope :global(.card-grid) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.scope :global(.detail-card) {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.scope :global(.detail-label) {
+  display: block;
+  font-size: 11px;
+  margin-bottom: 7px;
+}
+
+.scope :global(.detail-hint) {
+  margin-top: 7px;
+  margin-bottom: 0;
+  font-size: 11px;
+}
+
+.scope :global(.gap-18) {
+  margin-top: 18px;
+}
+
+.scope :global(.divided) {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.scope :global(.small-text) {
+  margin-top: 8px;
+  margin-bottom: 0;
+  font-size: 11px;
+}
+
+.scope :global(.split-row) {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.scope :global(.scroll-x) {
+  overflow-x: auto;
+}
+
+.scope :global(.wide-field) {
+  min-width: 280px;
+  margin-top: 8px;
+}
+
+.scope :global(.gap-6) {
+  margin-top: 6px;
+}

@@ -1,0 +1,181 @@
+.scope {
+  display: contents;
+}
+
+.scope :global(.scheduler-note) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.scope :global(.scheduler-note h2) {
+  margin: 3px 0 4px;
+  font-size: 17px;
+}
+
+.scope :global(.scheduler-note p) {
+  margin: 0;
+  max-width: 760px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.scope :global(.top-actions) {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.scope :global(.table-wrap) {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.scope :global(.data-table) {
+  width: 100%;
+}
+
+.scope :global(.data-table th),
+.scope :global(.data-table td) {
+  padding-top: 9px;
+  padding-bottom: 9px;
+  vertical-align: middle;
+}
+
+.scope :global(.schedule-meta) {
+  margin-top: 3px;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.scope :global(.version-cell) {
+  display: grid;
+  gap: 2px;
+}
+
+.scope :global(.version-cell strong) {
+  font-size: 12px;
+}
+
+.scope :global(.version-cell span) {
+  font-size: 11.5px;
+  color: var(--muted);
+  text-transform: capitalize;
+}
+
+.scope :global(.workflow-cell) {
+  display: grid;
+  gap: 5px;
+  max-width: 220px;
+}
+
+.scope :global(.workflow-cell span) {
+  font-size: 11.5px;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.scope :global(.summary-panel) {
+  margin-bottom: 18px;
+}
+
+.scope :global(.readiness-grid) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.scope :global(.readiness-item) {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fbfcfe;
+}
+
+.scope :global(.readiness-status) {
+  display: grid;
+  gap: 6px;
+  justify-items: end;
+  text-align: right;
+}
+
+.scope :global(.readiness-copy) {
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--muted);
+  max-width: 180px;
+}
+
+.scope :global(.readiness-empty) {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 8px 0;
+}
+
+.scope :global(.action-row) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.scope :global(.action-row form) {
+  margin: 0;
+}
+
+.scope :global(.action-row .btn),
+.scope :global(.top-actions .btn) {
+  min-height: 32px;
+  padding: 6px 10px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.scope :global(.schedule-readonly) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 5px 9px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.scope :global(.schedule-readonly.submitted) {
+  font-weight: 800;
+}
+
+@media (max-width: 900px) {
+  .scope :global(.data-table) {
+    min-width: 920px;
+  }
+}
+
+@media (max-width: 760px) {
+  .scope :global(.scheduler-note) {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .scope :global(.top-actions) {
+    width: 100%;
+  }
+
+  .scope :global(.top-actions .btn) {
+    width: fit-content;
+  }
+
+  .scope :global(.action-row) {
+    min-width: 190px;
+  }
+}

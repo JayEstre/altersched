@@ -1,0 +1,471 @@
+.scope {
+  display: contents;
+}
+
+.scope :global(.page) {
+  display: grid;
+  gap: 15px;
+  padding-bottom: 35px;
+}
+
+.scope :global(.pageHeader) {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.scope :global(.pageHeader h1) {
+  margin: 4px 0 5px;
+  color: #0f172a;
+  font-size: 27px;
+}
+
+.scope :global(.pageHeader p) {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.scope :global(.eyebrow) {
+  color: #2563eb;
+  font-size: 10.5px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.scope :global(.summaryCard),
+.scope :global(.tableCard),
+.scope :global(.detailsCard),
+.scope :global(.actionCard),
+.scope :global(.emptyCard) {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.03),
+    0 8px 22px rgba(15, 23, 42, 0.025);
+}
+
+.scope :global(.summaryCard) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 16px 18px;
+}
+
+.scope :global(.fileInfo) {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+
+.scope :global(.fileIcon) {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  place-items: center;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 10.5px;
+  font-weight: 900;
+}
+
+.scope :global(.fileInfo strong) {
+  display: block;
+  color: #0f172a;
+  font-size: 12px;
+}
+
+.scope :global(.fileInfo span) {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 10.5px;
+}
+
+.scope :global(.stats) {
+  display: flex;
+  gap: 7px;
+}
+
+.scope :global(.stat) {
+  min-width: 92px;
+  border: 1px solid #e5e7eb;
+  border-radius: 9px;
+  padding: 8px 11px;
+  background: #f8fafc;
+}
+
+.scope :global(.stat strong) {
+  display: block;
+  color: #0f172a;
+  font-size: 17px;
+}
+
+.scope :global(.stat span) {
+  color: var(--muted);
+  font-size: 10.5px;
+}
+
+.scope :global(.stat.ready) {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+}
+
+.scope :global(.stat.ready strong) {
+  color: #15803d;
+}
+
+.scope :global(.stat.warning) {
+  border-color: #fde68a;
+  background: #fffbeb;
+}
+
+.scope :global(.stat.warning strong) {
+  color: #b45309;
+}
+
+.scope :global(.warningCard) {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid #fde68a;
+  border-radius: 11px;
+  padding: 12px 14px;
+  background: #fffbeb;
+}
+
+.scope :global(.warningIcon) {
+  display: grid;
+  width: 25px;
+  height: 25px;
+  flex: 0 0 25px;
+  place-items: center;
+  border-radius: 6px;
+  background: #fef3c7;
+  color: #b45309;
+  font-size: 11.5px;
+  font-weight: 900;
+}
+
+.scope :global(.warningCard strong) {
+  display: block;
+  margin-bottom: 3px;
+  color: #92400e;
+  font-size: 11.5px;
+}
+
+.scope :global(.warningCard p) {
+  margin: 2px 0;
+  color: #a16207;
+  font-size: 10.5px;
+  line-height: 1.45;
+}
+
+.scope :global(.noticeCard) {
+  border: 1px solid #bfdbfe;
+  border-radius: 11px;
+  padding: 12px 14px;
+  background: #eff6ff;
+}
+
+.scope :global(.noticeCard strong) {
+  display: block;
+  margin-bottom: 3px;
+  color: #1e40af;
+  font-size: 11.5px;
+}
+
+.scope :global(.noticeCard p) {
+  margin: 0;
+  color: #1d4ed8;
+  font-size: 10.5px;
+  line-height: 1.5;
+}
+
+.scope :global(.tableCard) {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.scope :global(.tableHeader) {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 16px 18px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.scope :global(.tableHeader h2) {
+  margin: 4px 0;
+  color: #0f172a;
+  font-size: 16px;
+}
+
+.scope :global(.tableHeader p) {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10.5px;
+}
+
+.scope :global(.legend) {
+  display: flex;
+  gap: 6px;
+}
+
+.scope :global(.readyDot),
+.scope :global(.reviewDot) {
+  border-radius: 999px;
+  padding: 5px 8px;
+  font-size: 10.5px;
+  font-weight: 900;
+}
+
+.scope :global(.readyDot) {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.scope :global(.reviewDot) {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.scope :global(.tableWrap) {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.scope :global(table) {
+  width: 100%;
+  min-width: 1500px;
+  border-collapse: collapse;
+}
+
+.scope :global(th) {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 9px 10px;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 10.5px;
+  font-weight: 900;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.scope :global(td) {
+  border-bottom: 1px solid #f1f5f9;
+  padding: 9px 10px;
+  color: #334155;
+  font-size: 10.5px;
+  vertical-align: top;
+}
+
+.scope :global(tbody tr:last-child td) {
+  border-bottom: 0;
+}
+
+.scope :global(tbody tr:hover td) {
+  background: #fafcff;
+}
+
+.scope :global(.rowNumber) {
+  color: var(--muted-2);
+}
+
+.scope :global(.status) {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 4px 7px;
+  font-size: 10.5px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.scope :global(.status.ready) {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.scope :global(.status.review) {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.scope :global(.blank) {
+  color: #cbd5e1;
+  font-size: 10.5px;
+  font-style: italic;
+}
+
+.scope :global(.none) {
+  color: #cbd5e1;
+}
+
+.scope :global(.missingList) {
+  display: flex;
+  max-width: 220px;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.scope :global(.missingList span) {
+  border-radius: 4px;
+  padding: 3px 5px;
+  background: #fff7ed;
+  color: #c2410c;
+  font-size: 10.5px;
+  white-space: nowrap;
+}
+
+.scope :global(.detailsCard) {
+  padding: 13px 16px;
+}
+
+.scope :global(.detailsCard strong) {
+  display: block;
+  margin-bottom: 3px;
+  color: #0f172a;
+  font-size: 11.5px;
+}
+
+.scope :global(.detailsCard p) {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10.5px;
+  line-height: 1.5;
+}
+
+.scope :global(.actionCard) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 17px 18px;
+}
+
+.scope :global(.actionCard h2) {
+  margin: 4px 0;
+  color: #0f172a;
+  font-size: 16px;
+}
+
+.scope :global(.actionCard p) {
+  max-width: 650px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 10.5px;
+  line-height: 1.5;
+}
+
+.scope :global(.primaryButton),
+.scope :global(.secondaryButton) {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  padding: 0 13px;
+  font-size: 11.5px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.scope :global(.primaryButton) {
+  border: 1px solid #2563eb;
+  background: #2563eb;
+  color: #fff;
+  cursor: pointer;
+}
+
+.scope :global(.primaryButton:hover) {
+  background: #1d4ed8;
+}
+
+.scope :global(.secondaryButton) {
+  border: 1px solid #dbe3ef;
+  background: #fff;
+  color: #334155;
+}
+
+.scope :global(.emptyCard) {
+  max-width: 520px;
+  margin: 60px auto;
+  padding: 30px;
+  text-align: center;
+}
+
+.scope :global(.emptyIcon) {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  margin: 0 auto 10px;
+  place-items: center;
+  border-radius: 10px;
+  background: #fee2e2;
+  color: #b91c1c;
+  font-weight: 900;
+}
+
+.scope :global(.emptyCard h1) {
+  margin: 0 0 6px;
+  color: #0f172a;
+  font-size: 19px;
+}
+
+.scope :global(.emptyCard p) {
+  margin: 0 0 15px;
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+@media (max-width: 850px) {
+  .scope :global(.summaryCard),
+  .scope :global(.actionCard) {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .scope :global(.stats) {
+    width: 100%;
+  }
+
+  .scope :global(.stat) {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .scope :global(.tableHeader) {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 550px) {
+  .scope :global(.pageHeader) {
+    flex-direction: column;
+  }
+
+  .scope :global(.pageHeader .secondaryButton) {
+    width: 100%;
+  }
+
+  .scope :global(.stats) {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .scope :global(.stat) {
+    width: auto;
+  }
+
+  .scope :global(.actionCard form),
+  .scope :global(.actionCard button) {
+    width: 100%;
+  }
+}

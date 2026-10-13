@@ -1,0 +1,18 @@
+.scope {
+  display: contents;
+}
+
+.scope :global(.scroll-x) {
+  overflow-x: auto;
+}
+
+.scope :global(.review-form) {
+  display: grid;
+  gap: 8px;
+  min-width: 220px;
+}
+
+.scope :global(.full-field) {
+  width: 100%;
+  margin-bottom: 8px;
+}

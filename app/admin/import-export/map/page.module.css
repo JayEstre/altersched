@@ -1,0 +1,459 @@
+.scope {
+  display: contents;
+}
+
+.scope :global(.page) {
+  display: grid;
+  gap: 15px;
+  padding-bottom: 35px;
+}
+
+.scope :global(.pageHeader) {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.scope :global(.pageHeader h1) {
+  margin: 4px 0 5px;
+  color: #0f172a;
+  font-size: 27px;
+}
+
+.scope :global(.pageHeader p) {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.scope :global(.eyebrow) {
+  color: #2563eb;
+  font-size: 10.5px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.scope :global(.fileCard),
+.scope :global(.sheetSelector),
+.scope :global(.mappingCard),
+.scope :global(.optionsCard),
+.scope :global(.actionCard),
+.scope :global(.emptyCard) {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.03),
+    0 8px 22px rgba(15, 23, 42, 0.025);
+}
+
+.scope :global(.fileCard) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 14px 17px;
+}
+
+.scope :global(.fileCard strong) {
+  display: block;
+  color: #0f172a;
+  font-size: 12px;
+}
+
+.scope :global(.fileCard span) {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 10.5px;
+}
+
+.scope :global(.statusBadge) {
+  border-radius: 999px;
+  padding: 5px 9px;
+  background: #fef3c7;
+  color: #92400e !important;
+  font-weight: 900;
+}
+
+.scope :global(.sheetSelector) {
+  padding: 15px 17px;
+}
+
+.scope :global(.sheetSelector > div:first-child) {
+  margin-bottom: 10px;
+}
+
+.scope :global(.sheetSelector strong) {
+  display: block;
+  color: #0f172a;
+  font-size: 11px;
+}
+
+.scope :global(.sheetSelector span) {
+  color: var(--muted);
+  font-size: 10.5px;
+}
+
+.scope :global(.sheetTabs) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.scope :global(.sheetTab) {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 7px 10px;
+  background: #ffffff;
+  color: #475569;
+  font-size: 10.5px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.scope :global(.sheetTab.active) {
+  border-color: #93c5fd;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.scope :global(.noticeCard) {
+  border: 1px solid #bfdbfe;
+  border-radius: 11px;
+  padding: 12px 14px;
+  background: #eff6ff;
+}
+
+.scope :global(.noticeCard strong) {
+  display: block;
+  margin-bottom: 3px;
+  color: #1e40af;
+  font-size: 11px;
+}
+
+.scope :global(.noticeCard p) {
+  margin: 0;
+  color: #1d4ed8;
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+.scope :global(.mappingForm) {
+  display: grid;
+  gap: 15px;
+}
+
+.scope :global(.mappingCard),
+.scope :global(.optionsCard) {
+  padding: 18px;
+}
+
+.scope :global(.cardHeader) {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 16px;
+}
+
+.scope :global(.cardHeader h2) {
+  margin: 4px 0 4px;
+  color: #0f172a;
+  font-size: 17px;
+}
+
+.scope :global(.cardHeader p) {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.scope :global(.headerOption) {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #475569;
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.scope :global(.headerOption input) {
+  accent-color: #2563eb;
+}
+
+.scope :global(.mappingGrid) {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.scope :global(.mappingItem) {
+  min-width: 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 11px;
+  padding: 12px;
+  background: #fafafa;
+}
+
+.scope :global(.columnTop) {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.scope :global(.columnLabel) {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--muted-2);
+  font-size: 10.5px;
+  font-weight: 900;
+}
+
+.scope :global(.columnTop strong) {
+  display: block;
+  overflow: hidden;
+  color: #0f172a;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scope :global(.columnNumber) {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  place-items: center;
+  border-radius: 6px;
+  background: #e2e8f0;
+  color: #475569;
+  font-size: 10.5px;
+  font-weight: 900;
+}
+
+.scope :global(.arrow) {
+  margin: 8px 0;
+  color: var(--muted-2);
+  font-size: 12px;
+  text-align: center;
+}
+
+.scope :global(.mappingItem > label) {
+  display: block;
+  margin-bottom: 4px;
+  color: #475569;
+  font-size: 10.5px;
+  font-weight: 800;
+}
+
+.scope :global(select) {
+  width: 100%;
+  min-height: 36px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 0 8px;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 11.5px;
+  outline: none;
+}
+
+.scope :global(select:focus) {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.scope :global(.samples) {
+  display: grid;
+  gap: 4px;
+  margin-top: 10px;
+}
+
+.scope :global(.samples > span) {
+  color: var(--muted-2);
+  font-size: 10.5px;
+  font-weight: 900;
+}
+
+.scope :global(.sampleValue) {
+  overflow: hidden;
+  border-radius: 5px;
+  padding: 4px 6px;
+  background: #ffffff;
+  color: #475569;
+  font-size: 10.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scope :global(.sampleValue.blank) {
+  color: #cbd5e1;
+  font-style: italic;
+}
+
+.scope :global(.optionGrid) {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.scope :global(.optionItem) {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 11px;
+  cursor: pointer;
+}
+
+.scope :global(.optionItem input) {
+  margin-top: 2px;
+  accent-color: #2563eb;
+}
+
+.scope :global(.optionItem strong) {
+  display: block;
+  margin-bottom: 3px;
+  color: #0f172a;
+  font-size: 11.5px;
+}
+
+.scope :global(.optionItem span) {
+  display: block;
+  color: var(--muted);
+  font-size: 10.5px;
+  line-height: 1.45;
+}
+
+.scope :global(.actionCard) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 15px 17px;
+}
+
+.scope :global(.actionCard strong) {
+  color: #0f172a;
+  font-size: 11px;
+}
+
+.scope :global(.actionCard p) {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 10.5px;
+}
+
+.scope :global(.actions) {
+  display: flex;
+  flex-shrink: 0;
+  gap: 7px;
+}
+
+.scope :global(.primaryButton),
+.scope :global(.secondaryButton) {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  padding: 0 13px;
+  font-size: 11.5px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.scope :global(button.primaryButton) {
+  cursor: pointer;
+}
+
+.scope :global(.primaryButton) {
+  border: 1px solid #2563eb;
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.scope :global(.primaryButton:hover) {
+  background: #1d4ed8;
+}
+
+.scope :global(.secondaryButton) {
+  border: 1px solid #dbe3ef;
+  background: #ffffff;
+  color: #334155;
+}
+
+.scope :global(.emptyCard) {
+  max-width: 520px;
+  margin: 60px auto;
+  padding: 30px;
+  text-align: center;
+}
+
+.scope :global(.emptyIcon) {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  margin: 0 auto 10px;
+  place-items: center;
+  border-radius: 10px;
+  background: #fee2e2;
+  color: #b91c1c;
+  font-weight: 900;
+}
+
+.scope :global(.emptyCard h1) {
+  margin: 0 0 6px;
+  color: #0f172a;
+  font-size: 19px;
+}
+
+.scope :global(.emptyCard p) {
+  margin: 0 0 15px;
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+@media (max-width: 1050px) {
+  .scope :global(.mappingGrid) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 750px) {
+  .scope :global(.pageHeader),
+  .scope :global(.cardHeader),
+  .scope :global(.actionCard) {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .scope :global(.mappingGrid),
+  .scope :global(.optionGrid) {
+    grid-template-columns: 1fr;
+  }
+
+  .scope :global(.actions) {
+    width: 100%;
+  }
+
+  .scope :global(.actions > *) {
+    flex: 1;
+  }
+}
+
+@media (max-width: 500px) {
+  .scope :global(.fileCard) {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .scope :global(.actions) {
+    flex-direction: column;
+  }
+}

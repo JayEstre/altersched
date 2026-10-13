@@ -1,0 +1,154 @@
+.scope {
+  display: contents;
+}
+
+.scope :global(.faculty-table-input),
+.scope :global(.faculty-table-select) {
+  width: 100%;
+  min-width: 88px;
+  height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel, #fff);
+  color: inherit;
+  padding: 0 8px;
+  font: inherit;
+}
+@media (min-width: 1051px) {
+  .scope :global(.faculty-table-input),
+  .scope :global(.faculty-table-select) {
+    height: 27px;
+    padding: 0 6px;
+    font-size: 10.5px;
+  }
+}
+
+.scope :global(.field-help) {
+  display: block;
+  margin-top: 6px;
+  opacity: 0.75;
+}
+
+.scope :global(.gap-18) {
+  margin-top: 18px;
+}
+
+.scope :global(.form-grid-2) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.scope :global(.align-end) {
+  display: flex;
+  align-items: end;
+}
+
+.scope :global(.tall-button) {
+  min-height: 42px;
+}
+
+.scope :global(.section-gap) {
+  margin-top: 20px;
+}
+
+.scope :global(.card-list) {
+  display: grid;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.scope :global(.record-card) {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.scope :global(.record-card-head) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.scope :global(.record-card-text) {
+  margin: 12px 0 0;
+  font-size: 11px;
+}
+
+.scope :global(.chip-row) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.scope :global(.form-grid-3) {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.scope :global(.slot-list) {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.scope :global(.slot-row) {
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.scope :global(.inline-actions) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scope :global(.info-grid) {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.scope :global(.info-card) {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 15px;
+}
+
+.scope :global(.info-card-step) {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: var(--accent-soft);
+  color: var(--accent);
+  margin-bottom: 12px;
+  font-size: 11.5px;
+  font-weight: 800;
+}
+
+.scope :global(.info-card-text) {
+  margin: 7px 0 0;
+  font-size: 11.5px;
+  line-height: 1.6;
+}
+
+/* stack the form grids on narrow screens */
+@media (max-width: 900px) {
+  .scope :global(.form-grid-2),
+  .scope :global(.form-grid-3),
+  .scope :global(.info-grid) {
+    grid-template-columns: 1fr;
+  }
+}

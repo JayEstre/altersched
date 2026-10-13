@@ -1,0 +1,249 @@
+.scope {
+  display: contents;
+}
+
+.scope :global(.alteration-nav) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.scope :global(.alteration-nav-actions) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.scope :global(.alteration-faculty) {
+  margin-bottom: 16px;
+}
+
+.scope :global(.alteration-faculty-head) {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.scope :global(.alteration-faculty-head h3) {
+  margin: 5px 0 4px;
+}
+
+.scope :global(.alteration-faculty-head p) {
+  margin: 0;
+}
+
+.scope :global(.alteration-summary) {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(110px, 1fr));
+  gap: 9px;
+  margin-bottom: 16px;
+}
+
+.scope :global(.alteration-stat) {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.scope :global(.alteration-stat span) {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.scope :global(.alteration-stat strong) {
+  font-size: 18px;
+}
+
+.scope :global(.alteration-request-panel) {
+  margin-bottom: 16px;
+}
+
+.scope :global(.alteration-head) {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.scope :global(.alteration-head h3) {
+  margin: 5px 0 4px;
+}
+
+.scope :global(.alteration-head p) {
+  margin: 0;
+}
+
+.scope :global(.alteration-form-grid) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.scope :global(.alteration-form-grid label),
+.scope :global(.alteration-reason) {
+  display: grid;
+  gap: 6px;
+}
+
+.scope :global(.alteration-form-grid label > span),
+.scope :global(.alteration-reason > span) {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.scope :global(.alteration-form-grid select),
+.scope :global(.alteration-form-grid input),
+.scope :global(.alteration-reason textarea) {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--panel);
+  color: inherit;
+  padding: 8px 10px;
+  font: inherit;
+}
+
+.scope :global(.alteration-reason) {
+  margin-top: 12px;
+}
+
+.scope :global(.alteration-reason textarea) {
+  resize: vertical;
+}
+
+.scope :global(.alteration-submit) {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+}
+
+.scope :global(.alteration-note) {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 10px 12px;
+  margin-top: 14px;
+  font-size: 12px;
+}
+
+.scope :global(.alteration-note span) {
+  color: var(--muted);
+}
+
+.scope :global(.alteration-history) {
+  display: grid;
+  gap: 10px;
+}
+
+.scope :global(.alteration-history-item) {
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  padding: 13px;
+}
+
+.scope :global(.alteration-history-head) {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.scope :global(.alteration-block) {
+  margin-top: 3px;
+  font-size: 12px;
+}
+
+.scope :global(.alteration-compare) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.scope :global(.alteration-compare > div) {
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 10px;
+}
+
+.scope :global(.alteration-compare span),
+.scope :global(.alteration-reason-box span),
+.scope :global(.alteration-review-box span) {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.scope :global(.alteration-compare p) {
+  margin: 4px 0 0;
+  font-size: 12px;
+}
+
+.scope :global(.alteration-reason-box),
+.scope :global(.alteration-review-box) {
+  margin-top: 10px;
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+
+.scope :global(.alteration-reason-box p),
+.scope :global(.alteration-review-box p) {
+  margin: 0;
+  font-size: 13px;
+}
+
+.scope :global(.alteration-history-footer) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+@media (max-width: 760px) {
+  .scope :global(.alteration-summary),
+  .scope :global(.alteration-form-grid),
+  .scope :global(.alteration-compare) {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .scope :global(.alteration-nav) {
+    align-items: stretch;
+  }
+
+  .scope :global(.alteration-nav-actions) {
+    width: 100%;
+  }
+
+  .scope :global(.alteration-nav-actions .user-btn) {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .scope :global(.alteration-submit .user-btn) {
+    width: 100%;
+    justify-content: center;
+  }
+}

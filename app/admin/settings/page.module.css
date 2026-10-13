@@ -1,0 +1,105 @@
+.scope {
+  display: contents;
+}
+
+.generatorForm {
+  display: grid;
+  gap: 16px;
+}
+
+.days {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.days legend,
+.field > span {
+  margin-bottom: 6px;
+  color: var(--text-soft);
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.dayList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dayOption {
+  position: relative;
+  cursor: pointer;
+}
+
+.dayOption input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.dayOption span {
+  display: inline-grid;
+  place-items: center;
+  min-width: 54px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 9px;
+  background: #fff;
+  color: var(--text-soft);
+  font-size: 13px;
+  font-weight: 700;
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+}
+
+.dayOption input:checked + span {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.dayOption input:focus-visible + span {
+  outline: 3px solid var(--accent-ring);
+  outline-offset: 2px;
+}
+
+.hours {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 220px));
+  gap: 14px;
+}
+
+.field {
+  display: grid;
+  min-width: 0;
+}
+
+.field input,
+.field select {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.actions small {
+  max-width: 560px;
+  font-size: 12px;
+}
+
+@media (max-width: 680px) {
+  .hours {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

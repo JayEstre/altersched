@@ -1,0 +1,167 @@
+.scope {
+  display: contents;
+}
+
+.scope :global(.room-table-wrap),
+.scope :global(.availability-table-wrap) {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.scope :global(.availability-table-wrap) {
+  margin-top: 16px;
+}
+
+.scope :global(.room-table-input),
+.scope :global(.room-table-select) {
+  width: 100%;
+  min-width: 0;
+  height: 32px;
+  border: 1px solid #d8dee6;
+  border-radius: 6px;
+  background: #fff;
+  padding: 0 8px;
+  color: inherit;
+  font: inherit;
+  outline: none;
+}
+
+.scope :global(.room-table-input:focus),
+.scope :global(.room-table-select:focus) {
+  border-color: #8db5de;
+}
+
+.scope :global(.room-code-input) {
+  min-width: 82px;
+  font-weight: 800;
+}
+
+.scope :global(.room-name-input) {
+  min-width: 170px;
+}
+
+.scope :global(.room-floor-input) {
+  min-width: 65px;
+}
+
+.scope :global(.room-capacity-input) {
+  min-width: 68px;
+}
+
+.scope :global(.room-table-select) {
+  min-width: 130px;
+}
+
+.scope :global(.room-type-note) {
+  display: block;
+  margin-top: 3px;
+  color: #667085;
+  font-size: 10.5px;
+}
+
+.scope :global(.room-actions-cell) {
+  min-width: 205px;
+}
+
+.scope :global(.room-actions) {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.scope :global(.room-actions form) {
+  margin: 0;
+}
+
+.scope :global(.room-action-btn) {
+  min-height: 30px;
+  padding: 0 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 10.5px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.scope :global(.room-save-btn) {
+  border: 1px solid #8db5de;
+  background: #edf5fd;
+  color: #175b94;
+}
+
+.scope :global(.room-deactivate-btn) {
+  border: 1px solid #e7c46d;
+  background: #fffdf5;
+  color: #9a6700;
+}
+
+.scope :global(.room-activate-btn) {
+  border: 1px solid #9bc9ad;
+  background: #f4fbf6;
+  color: #24723d;
+}
+
+.scope :global(.room-delete-btn) {
+  border: 1px solid #e6b1b1;
+  background: #fff7f7;
+  color: #b42323;
+}
+
+@media (min-width: 1051px) {
+  .scope :global(.room-create-grid) {
+    grid-template-columns:
+      minmax(105px, 0.8fr)
+      minmax(180px, 1.45fr)
+      minmax(145px, 1fr)
+      minmax(90px, 0.65fr)
+      minmax(125px, 0.9fr)
+      minmax(90px, 0.65fr);
+  }
+
+  .scope :global(.availability-grid) {
+    grid-template-columns:
+      minmax(150px, 1.2fr)
+      minmax(150px, 1.1fr)
+      minmax(105px, 0.75fr)
+      minmax(90px, 0.7fr)
+      minmax(90px, 0.7fr)
+      minmax(115px, 0.85fr)
+      minmax(150px, 1.1fr);
+  }
+
+  .scope :global(.room-table-input),
+  .scope :global(.room-table-select) {
+    height: 26px;
+    padding: 0 6px;
+    border-radius: 5px;
+    font-size: 10.5px;
+  }
+
+  .scope :global(.room-actions) {
+    gap: 3px;
+    flex-wrap: nowrap;
+  }
+
+  .scope :global(.room-action-btn) {
+    min-height: 24px;
+    height: 24px;
+    padding: 0 6px;
+    border-radius: 5px;
+    font-size: 10.5px;
+  }
+
+  .scope :global(.room-actions-cell) {
+    min-width: 180px;
+  }
+}
+
+@media (max-width: 700px) {
+  .scope :global(.room-actions) {
+    flex-wrap: wrap;
+  }
+
+  .scope :global(.room-action-btn) {
+    min-height: 32px;
+  }
+}
