@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { cache } from 'react'
 import { redirect } from 'next/navigation'
 
@@ -32,25 +31,4 @@ export async function requireRole(allowed: AlterSchedRole[]) {
   if (!isRoleAllowed(allowed, current.profile.role)) redirect('/login')
 
   return current
-=======
-import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
-import { fetchProfileForUser } from './profile'
-import { isApprovedProfile, isRoleAllowed, type AlterSchedRole, type ProfileRecord } from './redirect'
-
-export async function requireRole(allowed: AlterSchedRole[]) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) redirect('/login')
-
-  const profile = await fetchProfileForUser(supabase, user.id)
-  const typedProfile = profile as ProfileRecord | null
-
-  if (!typedProfile) redirect('/login')
-  if (!isApprovedProfile(typedProfile)) redirect('/pending-approval')
-  if (!isRoleAllowed(allowed, typedProfile.role)) redirect('/login')
-
-  return { user, profile: typedProfile }
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
 }

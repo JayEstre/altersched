@@ -1,0 +1,276 @@
+.stack {
+  display: grid;
+  gap: 20px;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.heading span {
+  min-width: 22px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.none {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.flashOk,
+.flashBad {
+  margin-bottom: 14px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  animation: flash-in 360ms var(--ease-out, ease-out) both;
+}
+
+.flashOk {
+  border: 1px solid #bfe3cf;
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.flashBad {
+  border: 1px solid #f4c3be;
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+@keyframes flash-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+/* Subjects */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 4px 4px 4px 11px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 13px;
+  transition: border-color var(--dur-fast, 120ms) ease;
+}
+
+.chip span {
+  overflow: hidden;
+  color: var(--text-soft);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chip strong {
+  color: var(--navy);
+}
+
+.chip button,
+.window button {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1;
+  transition:
+    background var(--dur-fast, 120ms) ease,
+    color var(--dur-fast, 120ms) ease;
+}
+
+.chip:hover {
+  border-color: var(--danger);
+}
+
+.chip button:hover,
+.window button:hover {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.addRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.addRow label,
+.addGrid label {
+  display: grid;
+  gap: 5px;
+}
+
+.addRow label > span,
+.addGrid label > span {
+  color: var(--text-soft);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.grow {
+  flex: 1 1 260px;
+}
+
+/* Availability: one line per day, windows as chips */
+.week {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  list-style: none;
+}
+
+.day {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.day:last-child {
+  border-bottom: 0;
+}
+
+.dayName {
+  color: var(--text);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.windows {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.window {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 3px 3px 10px;
+  border: 1px solid;
+  border-left-width: 4px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.window span {
+  display: grid;
+  line-height: 1.25;
+}
+
+.window small {
+  font-size: 11.5px;
+  font-weight: 500;
+  opacity: 0.85;
+}
+
+.available {
+  border-color: #bfe3cf;
+  border-left-color: var(--success);
+  background: var(--success-soft);
+  color: #11553b;
+}
+
+.preferred {
+  border-color: #c9d7ec;
+  border-left-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--navy);
+}
+
+.unavailable {
+  border-color: #f4c3be;
+  border-left-color: var(--danger);
+  background: var(--danger-soft);
+  color: #7a1a12;
+}
+
+.addGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.wide {
+  grid-column: span 3;
+}
+
+.addActions {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+@media (max-width: 640px) {
+  .addGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .wide {
+    grid-column: 1 / -1;
+  }
+
+  .addActions {
+    grid-column: 1 / -1;
+  }
+
+  .addActions :global(.btn) {
+    flex: 1;
+  }
+
+  .day {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flashOk,
+  .flashBad {
+    animation: none;
+  }
+}

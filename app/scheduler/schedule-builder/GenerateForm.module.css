@@ -1,0 +1,332 @@
+/* Explanation shown when the generator cannot place every class. */
+
+.report {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+  padding: 16px 18px;
+  border: 1px solid #f3c4ca;
+  border-left: 4px solid var(--danger);
+  border-radius: var(--radius);
+  background: #fffafa;
+  scroll-margin-top: 16px;
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.head h4 {
+  margin: 3px 0 4px;
+  color: var(--text);
+  font-size: 17px;
+}
+
+.head p {
+  margin: 0;
+  max-width: 70ch;
+  color: var(--text-soft);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.kicker {
+  color: #a1283a;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.meter {
+  display: grid;
+  flex: 0 0 132px;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  text-align: right;
+}
+
+.meterValue {
+  color: var(--text);
+  font-size: 20px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.meterLabel {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.meterTrack {
+  display: block;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #f1d5d9;
+}
+
+.meterTrack span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--success);
+}
+
+.shortages {
+  padding: 12px 14px;
+  border: 1px solid #f0d9a8;
+  border-radius: var(--radius-sm);
+  background: #fffaf0;
+}
+
+.shortages h5 {
+  margin: 0 0 6px;
+  color: #7a4f0e;
+  font-size: 13px;
+}
+
+.shortages ul {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-left: 18px;
+  color: #5c3d0a;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.problems {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.problem {
+  display: grid;
+  gap: 5px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #fff;
+}
+
+.problemHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.problemHead strong {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.badge {
+  padding: 2px 9px;
+  border: 1px solid #f3c4ca;
+  border-radius: 999px;
+  background: #fdecee;
+  color: #9b1c2e;
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.classes {
+  display: grid;
+  gap: 6px;
+}
+
+.classesLabel {
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.classes ul {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  list-style: none;
+}
+
+.classes li {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 10px;
+  font-size: 12.5px;
+}
+
+.classes li + li {
+  border-top: 1px solid var(--line);
+}
+
+.classes li strong {
+  color: var(--text);
+}
+
+.className {
+  overflow: hidden;
+  color: var(--text-soft);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.classMeta {
+  color: var(--muted);
+  text-align: right;
+}
+
+.reason {
+  margin: 0;
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.fix {
+  display: flex;
+  gap: 8px;
+  margin: 2px 0 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--accent-soft);
+  color: #17406f;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.fix span {
+  flex: none;
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.moreClasses summary {
+  width: fit-content;
+  margin: 2px 0 6px;
+  color: var(--accent);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.more summary {
+  width: fit-content;
+  margin-bottom: 10px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .report {
+    padding: 14px;
+  }
+
+  .head {
+    flex-direction: column;
+  }
+
+  .meter {
+    flex-basis: auto;
+    width: 100%;
+    text-align: left;
+  }
+
+  .fix {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .classes li {
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+
+  .classMeta {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+}
+
+/* Working state while the generator runs. */
+.pending {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  animation: pending-in 200ms ease both;
+}
+
+.pendingTrack {
+  position: relative;
+  display: block;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--accent-soft);
+}
+
+.pendingTrack span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 35%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent), var(--gold));
+  animation: pending-sweep 1.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes pending-sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}
+
+@keyframes pending-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* The report arrives with a short rise so it is clear it is new. */
+.report {
+  animation: report-in 360ms cubic-bezier(0.22, 0.75, 0.2, 1) both;
+}
+
+@keyframes report-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pending,
+  .report {
+    animation: none;
+  }
+
+  .pendingTrack span {
+    width: 100%;
+    animation: none;
+  }
+}

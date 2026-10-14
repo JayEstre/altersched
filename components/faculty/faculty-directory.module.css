@@ -49,13 +49,13 @@
   border-radius: 999px;
   background: #eef2f7;
   color: var(--text-soft);
-  font-size: 11px;
+  font-size: 12px;
   text-align: center;
 }
 
 .deptTabActive span {
-  background: rgba(255, 255, 255, 0.22);
-  color: #fff;
+  background: #fff;
+  color: var(--accent);
 }
 
 /* ---------- toolbar ---------- */
@@ -110,7 +110,7 @@
   border-radius: 999px;
   background: #e2e8f0;
   color: var(--text-soft);
-  font-size: 11px;
+  font-size: 12px;
   text-align: center;
 }
 
@@ -140,10 +140,8 @@
 .head {
   padding: 0 16px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 
 .list {
@@ -269,7 +267,7 @@
 
 .load small {
   color: var(--muted);
-  font-size: 11.5px;
+  font-size: 12.5px;
 }
 
 .setup {
@@ -280,12 +278,26 @@
 
 .ok,
 .warn {
-  padding: 3px 9px;
+  min-height: 28px;
+  padding: 3px 11px;
   border: 1px solid;
   border-radius: 999px;
-  font-size: 11.5px;
+  font: inherit;
+  font-size: 12.5px;
   font-weight: 700;
   white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--dur-fast, 120ms) ease,
+    border-color var(--dur-fast, 120ms) ease,
+    box-shadow var(--dur, 200ms) ease;
+}
+
+/* The two setup chips open the Subjects and Availability windows. */
+.ok:hover,
+.warn:hover {
+  border-color: currentColor;
+  box-shadow: 0 3px 10px -6px currentColor;
 }
 
 .ok {
@@ -359,7 +371,7 @@
 
 .field > span {
   color: var(--text-soft);
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 700;
 }
 
@@ -449,7 +461,7 @@
     margin-right: 6px;
     color: var(--muted);
     font-family: inherit;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
   }
 

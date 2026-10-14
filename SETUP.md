@@ -14,14 +14,17 @@ Follow these steps in order on a **new Supabase project**. Takes about 15 minute
 > Already have a database from an earlier version? Do **not** rerun everything. Back it up, then run only
 > the migrations you are missing, in order:
 >
-> - from V5 or older: `AlterSched_V6_Fixes.sql`, then `AlterSched_V7_Assignments.sql`, then
->   `AlterSched_V8_Scheduling_Settings.sql`
-> - from V6: `AlterSched_V7_Assignments.sql`, then `AlterSched_V8_Scheduling_Settings.sql`
-> - from V7: `AlterSched_V8_Scheduling_Settings.sql`
+> - from V5 or older: `AlterSched_V6_Fixes.sql`, `AlterSched_V7_Assignments.sql`,
+>   `AlterSched_V8_Scheduling_Settings.sql`, then `AlterSched_V9_Instructor_Self_Service.sql`
+> - from V6: `AlterSched_V7_Assignments.sql`, `AlterSched_V8_Scheduling_Settings.sql`, then
+>   `AlterSched_V9_Instructor_Self_Service.sql`
+> - from V7: `AlterSched_V8_Scheduling_Settings.sql`, then `AlterSched_V9_Instructor_Self_Service.sql`
+> - from V8: `AlterSched_V9_Instructor_Self_Service.sql`
 >
 > All are in `database/`, safe to run more than once, and do not delete data. V7 adds the Auto/Manual
 > assignment flag, the `assign_offering_instructor` and `save_schedule_draft` functions, and allows
 > swapping two classes' times in one save. V8 adds the Schedule Generator settings (Admin → Settings).
+> V9 lets instructors enter their own availability and read the classes on their published timetable.
 
 ## 2. Supabase Auth settings
 

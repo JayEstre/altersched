@@ -26,7 +26,7 @@ function back(path: string, query: Record<string, string>): never {
 
 /**
  * Change or clear the instructor of a class offering.
- * Used by the Super Admin (Class Offerings, Subjects) and the Department Scheduler (Scheduling Inputs).
+ * Used by the Super Admin (Class Offerings) and the Department Scheduler (Scheduling Inputs).
  * Form fields: offering_id, faculty_id, intent ("assign" | "clear"), return_to.
  */
 export async function updateOfferingInstructor(formData: FormData) {
@@ -51,12 +51,7 @@ export async function updateOfferingInstructor(formData: FormData) {
     back(path, { error: 'assignment_failed', details: result.message })
   }
 
-  for (const page of [
-    ...RETURN_PATHS,
-    '/scheduler/schedule-builder',
-    '/scheduler/schedules',
-    '/faculty/teaching-load',
-  ]) {
+  for (const page of [...RETURN_PATHS, '/scheduler/schedule-builder', '/scheduler/schedules']) {
     revalidatePath(page)
   }
   back(path, {

@@ -1,6 +1,14 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type MouseEvent } from 'react'
+import {
+  InstructorSetupDialog,
+  type SetupAvailability,
+  type SetupKind,
+  type SetupQualification,
+  type SetupSemester,
+  type SetupSubject,
+} from './instructor-setup-dialog'
 import styles from './faculty-directory.module.css'
 
 export type FacultyDirectoryRow = {
@@ -19,12 +27,31 @@ export type FacultyDirectoryRow = {
 
 type Department = { id: string; code: string | null; name: string }
 
+type Action = (formData: FormData) => void | Promise<void>
+
 type Props = {
   rows: FacultyDirectoryRow[]
   departments: Department[]
-  updateAction: (formData: FormData) => void | Promise<void>
+  updateAction: Action
   /** Department shown first and selected when the page opens (default BSIT). */
   priorityCode?: string
+  /** Data and actions for the Subjects and Availability windows. */
+  setup: {
+    subjects: SetupSubject[]
+    qualifications: SetupQualification[]
+    availability: SetupAvailability[]
+    semesters: SetupSemester[]
+    actions: {
+      assignSubject: Action
+      removeSubject: Action
+      addAvailability: Action
+      removeAvailability: Action
+    }
+  }
+  /** "subjects:<id>" or "availability:<id>": window to reopen after a save. */
+  initialOpen?: string
+  /** Result of that save, shown inside the reopened window. */
+  flash?: { tone: 'success' | 'danger'; text: string } | null
 }
 
 type Filter = 'all' | 'setup' | 'ready'
@@ -56,7 +83,34 @@ export function FacultyDirectory({
   departments,
   updateAction,
   priorityCode = 'BSIT',
+  setup,
+  initialOpen,
+  flash,
 }: Props) {
+  const [dialog, setDialog] = useState<{ kind: SetupKind; id: string } | null>(() => {
+    const [kind, id] = (initialOpen ?? '').split(':')
+    return (kind === 'subjects' || kind === 'availability') && rows.some((row) => row.id === id)
+      ? { kind, id }
+      : null
+  })
+  // The save message belongs to the window it came from, until that window is closed.
+  const flashKey = flash ? `${initialOpen}|${flash.tone}|${flash.text}` : ''
+  const [dismissedFlash, setDismissedFlash] = useState('')
+  const showFlash =
+    Boolean(flash) &&
+    flashKey !== dismissedFlash &&
+    dialog !== null &&
+    `${dialog.kind}:${dialog.id}` === initialOpen
+  const dialogRow = dialog ? rows.find((row) => row.id === dialog.id) : undefined
+
+  /** Opens a window from a button inside a row summary without folding the row open. */
+  const openSetup = (kind: SetupKind, id: string) => (event: MouseEvent) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setDismissedFlash(flashKey)
+    setDialog({ kind, id })
+  }
+
   const departmentById = useMemo(
     () => new Map(departments.map((item) => [item.id, item])),
     [departments]
@@ -210,12 +264,22 @@ export function FacultyDirectory({
                       </small>
                     </span>
                     <span className={styles.setup}>
-                      <span className={row.subjects ? styles.ok : styles.warn}>
+                      <button
+                        type="button"
+                        className={row.subjects ? styles.ok : styles.warn}
+                        onClick={openSetup('subjects', row.id)}
+                        aria-label={`Subjects of ${row.name}`}
+                      >
                         {row.subjects} {row.subjects === 1 ? 'subject' : 'subjects'}
-                      </span>
-                      <span className={row.availability ? styles.ok : styles.warn}>
+                      </button>
+                      <button
+                        type="button"
+                        className={row.availability ? styles.ok : styles.warn}
+                        onClick={openSetup('availability', row.id)}
+                        aria-label={`Availability of ${row.name}`}
+                      >
                         {row.availability ? `${row.availability} availability` : 'No availability'}
-                      </span>
+                      </button>
                     </span>
                     <span className={styles.editHint}>
                       <span className={styles.editText}>Edit</span>
@@ -229,7 +293,7 @@ export function FacultyDirectory({
                       <p className={styles.gapNote}>
                         Missing for automatic scheduling: <strong>{gaps.join(', ')}</strong>.
                         {gaps.some((gap) => gap !== 'max load') &&
-                          ' Add qualified subjects and availability in the sections below.'}
+                          ' Use the subjects and availability buttons on this row.'}
                       </p>
                     )}
                     <label className={styles.field}>
@@ -277,6 +341,29 @@ export function FacultyDirectory({
             )
           })}
         </ul>
+      )}
+
+      {dialog && dialogRow && (
+        <InstructorSetupDialog
+          key={`${dialog.kind}:${dialog.id}`}
+          kind={dialog.kind}
+          instructor={{
+            id: dialogRow.id,
+            name: dialogRow.name,
+            employeeId: dialogRow.employeeId,
+            departmentId: dialogRow.departmentId,
+          }}
+          subjects={setup.subjects}
+          qualifications={setup.qualifications}
+          availability={setup.availability}
+          semesters={setup.semesters}
+          actions={setup.actions}
+          flash={showFlash ? flash : null}
+          onClose={() => {
+            setDialog(null)
+            setDismissedFlash(flashKey)
+          }}
+        />
       )}
 
       <p className={styles.footer}>

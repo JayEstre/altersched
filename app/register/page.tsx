@@ -1,9 +1,8 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
 import { FormEvent, useEffect, useMemo, useState } from 'react'
-import { AuthCard, AuthPage } from '@/components/auth-shell'
+import { AuthCard, AuthHeading, AuthPage } from '@/components/auth-shell'
 import { PasswordField } from '@/components/password-field'
 import { createClient } from '@/lib/supabase/client'
 
@@ -19,7 +18,6 @@ export default function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   useEffect(() => {
-<<<<<<< HEAD
     // Visitors are not signed in, and RLS only lets approved users read `departments`.
     // get_registration_catalog() is a SECURITY DEFINER function that exposes only the
     // active department/program list needed by this form.
@@ -34,10 +32,6 @@ export default function RegisterPage() {
         .sort((a, b) => a.code.localeCompare(b.code))
       setDepartments(list)
     })
-=======
-    supabase.from('departments').select('id,code,name').eq('is_active', true).order('code')
-      .then(({ data }) => setDepartments((data || []) as Department[]))
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
   }, [supabase])
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -51,7 +45,6 @@ export default function RegisterPage() {
     const departmentId = String(form.get('department_id') || '').trim()
     const password = String(form.get('password') || '')
     const confirm = String(form.get('confirm_password') || '')
-<<<<<<< HEAD
     if (!fullName || !email || !employeeId || !departmentId || !password) {
       setError('Complete all required fields.')
       setSubmitting(false)
@@ -93,17 +86,6 @@ export default function RegisterPage() {
       setSubmitting(false)
       return
     }
-=======
-    if (!fullName || !email || !employeeId || !departmentId || !password) { setError('Complete all required fields.'); setSubmitting(false); return }
-    if (password.length < 8) { setError('Password must contain at least 8 characters.'); setSubmitting(false); return }
-    if (password !== confirm) { setError('Passwords do not match.'); setSubmitting(false); return }
-
-    const { data, error: signUpError } = await supabase.auth.signUp({
-      email, password,
-      options: { data: { full_name: fullName, role: 'faculty', employee_id: employeeId, department_id: departmentId } },
-    })
-    if (signUpError || !data.user) { setError(signUpError?.message || 'Unable to create instructor account.'); setSubmitting(false); return }
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
     if (data.session) await supabase.auth.signOut()
     setSuccess(true)
     setSubmitting(false)
@@ -112,30 +94,14 @@ export default function RegisterPage() {
   if (success) {
     return (
       <AuthPage>
-        <AuthCard status className="auth-status-card">
-<<<<<<< HEAD
-          <div className="auth-brand-lockup">
-            <Image src="/altsched-logo.png" alt="AlterSched" width={58} height={58} />
-            <strong>AlterSched</strong>
-          </div>
-          <div className="auth-success-icon">✓</div>
-          <p className="eyebrow">REGISTRATION RECEIVED</p>
-          <h1>Awaiting administrator approval</h1>
-          <p className="muted">
-            Your Instructor account was created successfully. You can sign in after an Administrator
-            approves the account.
-          </p>
-          <Link className="btn btn-primary" href="/login">
-            Return to sign in
+        <AuthCard>
+          <AuthHeading title="Account created">
+            An Administrator needs to approve your account. Once approved, sign in with the email
+            and password you just entered.
+          </AuthHeading>
+          <Link className="btn btn-primary auth-submit" href="/login">
+            Back to sign in
           </Link>
-=======
-          <div className="auth-brand-lockup"><Image src="/altsched-logo.png" alt="AlterSched" width={58} height={58}/><strong>AlterSched</strong></div>
-          <div className="auth-success-icon">✓</div>
-          <p className="eyebrow">REGISTRATION RECEIVED</p>
-          <h1>Awaiting administrator approval</h1>
-          <p className="muted">Your Instructor account was created successfully. You can sign in after an Administrator approves the account.</p>
-          <Link className="btn btn-primary" href="/login">Return to sign in</Link>
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
         </AuthCard>
       </AuthPage>
     )
@@ -143,38 +109,11 @@ export default function RegisterPage() {
 
   return (
     <AuthPage>
-      <AuthCard wide className="auth-card-polished">
-        <header className="auth-hero">
-          <div className="auth-school-lockup">
-<<<<<<< HEAD
-            <Image
-              src="/cctc-logo.png"
-              alt="Consolatrix College of Toledo City"
-              width={64}
-              height={64}
-              priority
-            />
-            <span>
-              <strong>Consolatrix College</strong>
-              <small>of Toledo City, Inc.</small>
-            </span>
-          </div>
-          <div className="auth-brand-lockup">
-            <Image src="/altsched-logo.png" alt="AlterSched" width={64} height={64} priority />
-            <span>
-              <strong>AlterSched</strong>
-              <small>SMART SCHEDULING, BRIGHTER DAYS</small>
-            </span>
-          </div>
-        </header>
-        <div className="auth-copy">
-          <p className="eyebrow">INSTRUCTOR REGISTRATION</p>
-          <h1>Create your instructor account</h1>
-          <p className="muted">
-            Register below to request access to AlterSched. Instructor accounts require
-            Administrator approval before portal access.
-          </p>
-        </div>
+      <AuthCard wide>
+        <AuthHeading title="Create an instructor account">
+          The Administrator approves new accounts before you can sign in. Students do not need an
+          account.
+        </AuthHeading>
         <form className="form auth-form-grid" onSubmit={submit}>
           <label>
             Full name
@@ -207,28 +146,6 @@ export default function RegisterPage() {
               placeholder="name@school.edu"
             />
           </label>
-=======
-            <Image src="/cctc-logo.png" alt="Consolatrix College of Toledo City" width={64} height={64} priority/>
-            <span><strong>Consolatrix College</strong><small>of Toledo City, Inc.</small></span>
-          </div>
-          <div className="auth-brand-lockup">
-            <Image src="/altsched-logo.png" alt="AlterSched" width={64} height={64} priority/>
-            <span><strong>AlterSched</strong><small>SMART SCHEDULING, BRIGHTER DAYS</small></span>
-          </div>
-        </header>
-
-        <div className="auth-copy">
-          <p className="eyebrow">INSTRUCTOR REGISTRATION</p>
-          <h1>Create your instructor account</h1>
-          <p className="muted">Register below to request access to AlterSched. Instructor accounts require Administrator approval before portal access.</p>
-        </div>
-
-        <form className="form auth-form-grid" onSubmit={submit}>
-          <label>Full name<input name="full_name" autoComplete="name" required placeholder="Complete name"/></label>
-          <label>Employee ID<input name="employee_id" autoComplete="off" required placeholder="Employee ID"/></label>
-          <label>Department<select name="department_id" autoComplete="organization" required defaultValue=""><option value="" disabled>Select department</option>{departments.map(d=><option key={d.id} value={d.id}>{d.code} — {d.name}</option>)}</select></label>
-          <label>Email<input name="email" type="email" autoComplete="email" required placeholder="name@school.edu"/></label>
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
           <PasswordField
             label="Password"
             name="password"
@@ -250,7 +167,6 @@ export default function RegisterPage() {
             placeholder="Repeat password"
           />
           {error && <div className="form-alert error span-2">{error}</div>}
-<<<<<<< HEAD
           <button
             className="btn btn-primary span-2 auth-submit"
             type="submit"
@@ -262,11 +178,6 @@ export default function RegisterPage() {
         <p className="switch">
           Already registered? <Link href="/login">Sign in</Link>
         </p>
-=======
-          <button className="btn btn-primary span-2 auth-submit" type="submit" disabled={submitting}>{submitting ? 'Creating account…' : 'Submit for approval'}</button>
-        </form>
-        <p className="switch">Already registered? <Link href="/login">Sign in</Link></p>
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
       </AuthCard>
     </AuthPage>
   )

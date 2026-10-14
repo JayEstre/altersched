@@ -1,15 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-<<<<<<< HEAD
     "lib": ["dom", "dom.iterable", "esnext"],
-=======
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -25,13 +17,7 @@
       }
     ],
     "paths": {
-<<<<<<< HEAD
       "@/*": ["./*"]
-=======
-      "@/*": [
-        "./*"
-      ]
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
     },
     "allowJs": true,
     "skipLibCheck": true
@@ -43,11 +29,5 @@
     "**/*.ts",
     "**/*.tsx"
   ],
-<<<<<<< HEAD
   "exclude": ["node_modules"]
-=======
-  "exclude": [
-    "node_modules"
-  ]
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
 }

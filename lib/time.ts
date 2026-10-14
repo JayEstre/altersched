@@ -46,11 +46,3 @@ export function gapMinutes(startA: string, endA: string, startB: string, endB: s
   if (bEnd <= aStart) return aStart - bEnd
   return 0
 }
-
-/** True when [start, end) lies completely inside [outerStart, outerEnd]. */
-export function fitsWithin(start: string, end: string, outerStart: string, outerEnd: string) {
-  return (
-    timeToMinutes(start) >= timeToMinutes(outerStart) &&
-    timeToMinutes(end) <= timeToMinutes(outerEnd)
-  )
-}

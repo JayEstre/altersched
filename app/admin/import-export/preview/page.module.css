@@ -31,7 +31,7 @@
 
 .scope :global(.eyebrow) {
   color: #2563eb;
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 900;
   letter-spacing: 0.12em;
 }
@@ -72,7 +72,7 @@
   border-radius: 11px;
   background: #eff6ff;
   color: #1d4ed8;
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 900;
 }
 
@@ -89,7 +89,7 @@
 .scope :global(.fileMeta) {
   margin-top: 3px;
   color: var(--muted);
-  font-size: 11.5px;
+  font-size: 12.5px;
 }
 
 .scope :global(.summaryStats) {
@@ -116,7 +116,7 @@
   display: block;
   margin-top: 1px;
   color: var(--muted);
-  font-size: 10.5px;
+  font-size: 12px;
 }
 
 .scope :global(.warningCard),
@@ -142,13 +142,13 @@
   border-radius: 7px;
   background: #fef3c7;
   color: #b45309;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 900;
 }
 
 .scope :global(.warningCard strong) {
   color: #92400e;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .scope :global(.warningList) {
@@ -158,7 +158,7 @@
 .scope :global(.warningList p) {
   margin: 2px 0;
   color: #a16207;
-  font-size: 11.5px;
+  font-size: 12.5px;
   line-height: 1.45;
 }
 
@@ -171,13 +171,13 @@
   display: block;
   margin-bottom: 3px;
   color: #1e40af;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .scope :global(.noticeCard p) {
   margin: 0;
   color: #1d4ed8;
-  font-size: 11.5px;
+  font-size: 12.5px;
   line-height: 1.55;
 }
 
@@ -209,7 +209,7 @@
 .scope :global(.sheetHeader p) {
   margin: 0;
   color: var(--muted);
-  font-size: 11.5px;
+  font-size: 12.5px;
 }
 
 .scope :global(.reviewBadge) {
@@ -217,7 +217,7 @@
   padding: 5px 9px;
   background: #fef3c7;
   color: #92400e;
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 900;
 }
 
@@ -237,7 +237,7 @@
   background: #f8fafc;
   padding: 9px 11px;
   color: #475569;
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 900;
   text-align: left;
   white-space: nowrap;
@@ -248,7 +248,7 @@
   border-bottom: 1px solid #f1f5f9;
   padding: 9px 11px;
   color: #334155;
-  font-size: 11.5px;
+  font-size: 12.5px;
   line-height: 1.45;
   vertical-align: top;
 }
@@ -273,7 +273,7 @@
 
 .scope :global(.blankLabel) {
   color: #cbd5e1;
-  font-size: 10.5px;
+  font-size: 12px;
   font-style: italic;
 }
 
@@ -295,7 +295,7 @@
   max-width: 650px;
   margin: 0;
   color: var(--muted);
-  font-size: 11.5px;
+  font-size: 12.5px;
   line-height: 1.55;
 }
 
@@ -313,7 +313,7 @@
   justify-content: center;
   border-radius: 9px;
   padding: 0 13px;
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 900;
   text-decoration: none;
 }
@@ -366,7 +366,7 @@
 .scope :global(.emptyCard p) {
   margin: 0 auto 17px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.6;
 }
 

@@ -1,8 +1,4 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
-<<<<<<< HEAD
-=======
-
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
 import type { ProfileRecord } from './redirect'
 
 export async function fetchProfileForUser(

@@ -31,10 +31,29 @@ export type SolverResult = {
   unplaced: SessionRequirement[]
   /** Sessions with no valid room/time at all (hard constraints). */
   impossible: SessionRequirement[]
+  /**
+   * When incomplete: the sessions that still have no free slot after the leftover sessions were
+   * fitted in wherever possible — these are the ones the report explains.
+   */
+  stuck: SessionRequirement[]
+  /** When incomplete: the best attempt including those leftovers (used to explain `stuck`). */
+  attempt: GeneratedEntry[]
   searchNodes: number
 }
 
 type CandidateSet = { requirement: SessionRequirement; candidates: GeneratedEntry[] }
+
+/** The teaching window the generator works in, with defaults filled in. */
+export type SolverWindow = Required<Omit<SolverOptions, 'maxSearchNodes'>>
+
+export function resolveSolverWindow(options: SolverOptions = {}): SolverWindow {
+  return {
+    days: options.days ?? [1, 2, 3, 4, 5, 6],
+    dayStart: options.dayStart ?? 7 * 60,
+    dayEnd: options.dayEnd ?? 21 * 60,
+    interval: options.interval ?? 30,
+  }
+}
 
 /** Every room/day/time that satisfies the hard constraints for one session. */
 export function buildCandidates(
@@ -42,7 +61,7 @@ export function buildCandidates(
   rooms: Room[],
   facultyAvailability: FacultyAvailabilityRecord[],
   roomAvailability: RoomAvailabilityRecord[],
-  { days, dayStart, dayEnd, interval }: Required<Omit<SolverOptions, 'maxSearchNodes'>>
+  { days, dayStart, dayEnd, interval }: SolverWindow
 ): GeneratedEntry[] {
   const offering = requirement.offering
   const candidates: GeneratedEntry[] = []
@@ -101,12 +120,7 @@ export function solveTimetable(
   roomAvailability: RoomAvailabilityRecord[],
   options: SolverOptions = {}
 ): SolverResult {
-  const settings = {
-    days: options.days ?? [1, 2, 3, 4, 5, 6],
-    dayStart: options.dayStart ?? 7 * 60,
-    dayEnd: options.dayEnd ?? 21 * 60,
-    interval: options.interval ?? 30,
-  }
+  const settings = resolveSolverWindow(options)
   const maxSearchNodes = options.maxSearchNodes ?? 60000
   const roomById = new Map(rooms.map((room) => [room.id, room]))
 
@@ -180,13 +194,73 @@ export function solveTimetable(
     return false
   }
 
+  const best = (
+    candidates: GeneratedEntry[],
+    requirement: SessionRequirement,
+    placedSoFar: GeneratedEntry[]
+  ) =>
+    candidates
+      .filter((candidate) => !hasGeneratedConflict(candidate, placedSoFar))
+      .map((candidate) => ({
+        entry: candidate,
+        score: scoreScheduleCandidate(
+          candidate,
+          placedSoFar,
+          roomById.get(candidate.room_id)!,
+          requirement,
+          facultyAvailability
+        ),
+      }))
+      .sort((left, right) => left.score - right.score)[0]?.entry
+
   if (place(0)) {
-    return { complete: true, entries: placed, unplaced: [], impossible, searchNodes }
+    return {
+      complete: true,
+      entries: placed,
+      unplaced: [],
+      impossible,
+      stuck: [],
+      attempt: placed,
+      searchNodes,
+    }
+  }
+
+  /*
+   * The search could not place everything. Fit the remaining sessions into the best attempt
+   * wherever they still go; what is left is genuinely stuck. If everything fits (the search only
+   * ran out of steps), that attempt is a complete timetable.
+   */
+  const attempt = [...bestPartial]
+  const stuck: SessionRequirement[] = []
+  for (const set of sets.slice(deepestPlaced)) {
+    const entry = best(set.candidates, set.requirement, attempt)
+    if (entry) attempt.push(entry)
+    else stuck.push(set.requirement)
+  }
+
+  if (!stuck.length) {
+    return {
+      complete: true,
+      entries: attempt,
+      unplaced: [],
+      impossible,
+      stuck,
+      attempt,
+      searchNodes,
+    }
   }
 
   const unplaced = sets.slice(deepestPlaced).map((set) => set.requirement)
   for (const requirement of impossible) {
     if (!unplaced.includes(requirement)) unplaced.push(requirement)
   }
-  return { complete: false, entries: bestPartial, unplaced, impossible, searchNodes }
+  return {
+    complete: false,
+    entries: bestPartial,
+    unplaced,
+    impossible,
+    stuck,
+    attempt,
+    searchNodes,
+  }
 }

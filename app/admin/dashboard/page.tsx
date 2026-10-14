@@ -1,57 +1,61 @@
-<<<<<<< HEAD
 import Link from 'next/link'
+import { CheckCircle2, CircleAlert } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { PageHead, Stat, Empty, Badge } from '@/components/ui'
-import {
-  Users,
-  Building2,
-  DoorOpen,
-  BookOpenCheck,
-  CalendarRange,
-  GitPullRequest,
-  ArrowRight,
-  Upload,
-  Settings,
-  ShieldCheck,
-} from 'lucide-react'
+import { PageHead, Stat, Badge } from '@/components/ui'
+import { formatDate } from '@/lib/format'
+import styles from './page.module.css'
 
-export const revalidate = 60
+type Task = { label: string; detail: string; href: string; action: string; count: number }
+
+const STAGES: Record<string, { label: string; tone: 'info' | 'warning' | 'success' | 'default' }> =
+  {
+    draft: { label: 'Draft', tone: 'info' },
+    submitted: { label: 'Waiting for you', tone: 'warning' },
+    approved: { label: 'Approved', tone: 'info' },
+    published: { label: 'Published', tone: 'success' },
+    archived: { label: 'Archived', tone: 'default' },
+  }
 
 export default async function Page() {
   const supabase = await createClient()
-=======
-import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
-import { PageHead, Stat, Empty, Badge } from "@/components/ui";
-import { Users, Building2, DoorOpen, BookOpenCheck, CalendarRange, GitPullRequest, ArrowRight, Upload, Settings, ShieldCheck } from "lucide-react";
-
-export const revalidate = 60;
-
-export default async function Page() {
-  const supabase = await createClient();
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
 
   const [
-    users,
-    facultyProfiles,
-    departments,
+    pendingAccounts,
+    instructors,
     rooms,
     offerings,
-    schedules,
-    publishedSchedules,
+    unassigned,
+    submitted,
+    published,
     pendingRequests,
-    unresolvedValidation,
     activeYear,
     activeSemester,
     recentSchedules,
   ] = await Promise.all([
-<<<<<<< HEAD
-    supabase.from('profiles').select('id', { count: 'exact', head: true }),
-    supabase.from('faculty_profiles').select('id', { count: 'exact', head: true }),
-    supabase.from('departments').select('id', { count: 'exact', head: true }).eq('is_active', true),
+    supabase
+      .from('profiles')
+      .select('id', { count: 'exact', head: true })
+      .in('role', ['faculty', 'department_scheduler'])
+      .eq('account_status', 'pending'),
+    supabase
+      .from('profiles')
+      .select('id', { count: 'exact', head: true })
+      .in('role', ['faculty', 'department_scheduler'])
+      .eq('account_status', 'approved'),
     supabase.from('rooms').select('id', { count: 'exact', head: true }).eq('is_active', true),
-    supabase.from('class_offerings').select('id', { count: 'exact', head: true }),
-    supabase.from('schedules').select('id', { count: 'exact', head: true }),
+    supabase
+      .from('class_offerings')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'active'),
+    supabase
+      .from('class_offerings')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'active')
+      .is('faculty_id', null),
+    supabase
+      .from('schedules')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'submitted'),
     supabase
       .from('schedules')
       .select('id', { count: 'exact', head: true })
@@ -61,267 +65,139 @@ export default async function Page() {
       .from('schedule_change_requests')
       .select('id', { count: 'exact', head: true })
       .eq('status', 'pending'),
-    supabase
-      .from('schedule_validation_logs')
-      .select('id', { count: 'exact', head: true })
-      .eq('resolved', false),
-    supabase.from('academic_years').select('id,name').eq('is_active', true).maybeSingle(),
-    supabase.from('semesters').select('id,name').eq('is_active', true).maybeSingle(),
+    supabase.from('academic_years').select('id, name').eq('is_active', true).maybeSingle(),
+    supabase.from('semesters').select('id, name').eq('is_active', true).maybeSingle(),
     supabase
       .from('schedules')
-      .select('id,title,status,updated_at')
+      .select('id, title, status, updated_at, sections(code)')
+      .neq('status', 'archived')
       .order('updated_at', { ascending: false })
-      .limit(5),
+      .limit(6),
   ])
 
-  const healthScore = Math.max(
-    0,
-    100 - (unresolvedValidation.count ?? 0) * 12 - (pendingRequests.count ?? 0) * 8
-  )
-  const healthTone = healthScore >= 80 ? 'success' : healthScore >= 60 ? 'warning' : 'danger'
-  const healthLabel = healthScore >= 80 ? 'Stable' : healthScore >= 60 ? 'Watchlist' : 'Critical'
-=======
-    supabase.from("profiles").select("id", { count: "exact", head: true }),
-    supabase.from("faculty_profiles").select("id", { count: "exact", head: true }),
-    supabase.from("departments").select("id", { count: "exact", head: true }).eq("is_active", true),
-    supabase.from("rooms").select("id", { count: "exact", head: true }).eq("is_active", true),
-    supabase.from("class_offerings").select("id", { count: "exact", head: true }),
-    supabase.from("schedules").select("id", { count: "exact", head: true }),
-    supabase.from("schedules").select("id", { count: "exact", head: true }).eq("status", "published"),
-    supabase.from("schedule_change_requests").select("id", { count: "exact", head: true }).eq("status", "pending"),
-    supabase.from("schedule_validation_logs").select("id", { count: "exact", head: true }).eq("resolved", false),
-    supabase.from("academic_years").select("id,name").eq("is_active", true).maybeSingle(),
-    supabase.from("semesters").select("id,name").eq("is_active", true).maybeSingle(),
-    supabase.from("schedules").select("id,title,status,updated_at").order("updated_at", { ascending: false }).limit(5),
-  ]);
+  const term = [activeYear.data?.name, activeSemester.data?.name].filter(Boolean).join(' · ')
 
-  const healthScore = Math.max(0, 100 - ((unresolvedValidation.count ?? 0) * 12) - ((pendingRequests.count ?? 0) * 8));
-  const healthTone = healthScore >= 80 ? 'success' : healthScore >= 60 ? 'warning' : 'danger';
-  const healthLabel = healthScore >= 80 ? 'Stable' : healthScore >= 60 ? 'Watchlist' : 'Critical';
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
+  const tasks: Task[] = [
+    {
+      label: 'Approve instructor accounts',
+      detail: 'New registrations cannot sign in until you approve them.',
+      href: '/admin/users?status=pending',
+      action: 'Review accounts',
+      count: pendingAccounts.count ?? 0,
+    },
+    {
+      label: 'Publish submitted schedules',
+      detail: 'The Department Scheduler sent these for your final review.',
+      href: '/admin/schedules',
+      action: 'Review schedules',
+      count: submitted.count ?? 0,
+    },
+    {
+      label: 'Answer schedule requests',
+      detail: 'Instructors asked to move a published class.',
+      href: '/admin/change-requests',
+      action: 'Open requests',
+      count: pendingRequests.count ?? 0,
+    },
+    {
+      label: 'Classes without an instructor',
+      detail:
+        'Assigned automatically when the schedule is generated, if a qualified instructor is free.',
+      href: '/admin/class-offerings',
+      action: 'Class offerings',
+      count: unassigned.count ?? 0,
+    },
+  ]
+  const open = tasks.filter((task) => task.count > 0)
 
   return (
     <>
       <PageHead
-        eyebrow="CCTC OPERATIONS"
-        title="Administration Dashboard"
-        description="A live overview of Consolatrix College of Toledo City's academic scheduling environment."
-<<<<<<< HEAD
+        title="Dashboard"
+        description={
+          term
+            ? `Consolatrix College of Toledo City · ${term}`
+            : 'Set the active school year and semester to start scheduling.'
+        }
         actions={
           <Link className="btn btn-primary" href="/admin/schedules">
-            Review Schedules
+            Review schedules
           </Link>
         }
       />
-      <div className="context-strip">
-        <div>
-          <span>Academic Year</span>
-          <strong>{activeYear.data?.name || 'Not configured'}</strong>
-        </div>
-        <div>
-          <span>Active Term</span>
-          <strong>{activeSemester.data?.name || 'Not configured'}</strong>
-        </div>
-      </div>
-      <div className="stats-grid">
-        <Stat
-          label="User Accounts"
-          value={users.count || 0}
-          hint="Registered system users"
-          icon={<Users size={16} />}
-        />
-        <Stat
-          label="Faculty Profiles"
-          value={facultyProfiles.count || 0}
-          hint="Active faculty roster"
-          icon={<Users size={16} />}
-        />
-        <Stat
-          label="Active Departments"
-          value={departments.count || 0}
-          hint="Available academic units"
-          icon={<Building2 size={16} />}
-        />
-        <Stat
-          label="Active Rooms"
-          value={rooms.count || 0}
-          hint="Ready for scheduling"
-          icon={<DoorOpen size={16} />}
-        />
-        <Stat
-          label="Class Offerings"
-          value={offerings.count || 0}
-          hint="Scheduling inputs"
-          icon={<BookOpenCheck size={16} />}
-        />
-        <Stat
-          label="Schedules"
-          value={schedules.count || 0}
-          hint="Generated records"
-          icon={<CalendarRange size={16} />}
-        />
-        <Stat
-          label="Published"
-          value={publishedSchedules.count || 0}
-          hint="Official schedule records"
-          icon={<ShieldCheck size={16} />}
-        />
-        <Stat
-          label="Pending Alterations"
-          value={pendingRequests.count || 0}
-          hint="Requests needing review"
-          icon={<GitPullRequest size={16} />}
-        />
-      </div>
-=======
-        actions={<Link className="btn btn-primary" href="/admin/schedule-builder">Open Schedule Builder</Link>}
-      />
 
-      <div className="context-strip">
-        <div><span>Academic Year</span><strong>{activeYear.data?.name || "Not configured"}</strong></div>
-        <div><span>Active Term</span><strong>{activeSemester.data?.name || "Not configured"}</strong></div>
-      </div>
-
-      <div className="stats-grid">
-        <Stat label="User Accounts" value={users.count || 0} hint="Registered system users" icon={<Users size={16} />} />
-        <Stat label="Faculty Profiles" value={facultyProfiles.count || 0} hint="Active faculty roster" icon={<Users size={16} />} />
-        <Stat label="Active Departments" value={departments.count || 0} hint="Available academic units" icon={<Building2 size={16} />} />
-        <Stat label="Active Rooms" value={rooms.count || 0} hint="Ready for scheduling" icon={<DoorOpen size={16} />} />
-        <Stat label="Class Offerings" value={offerings.count || 0} hint="Scheduling inputs" icon={<BookOpenCheck size={16} />} />
-        <Stat label="Schedules" value={schedules.count || 0} hint="Generated records" icon={<CalendarRange size={16} />} />
-        <Stat label="Published" value={publishedSchedules.count || 0} hint="Official schedule records" icon={<ShieldCheck size={16} />} />
-        <Stat label="Pending Alterations" value={pendingRequests.count || 0} hint="Requests needing review" icon={<GitPullRequest size={16} />} />
-      </div>
-
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-      <section className="panel">
-        <div className="panel-header">
+      {!term && (
+        <section className={`panel ${styles.setup}`}>
+          <CircleAlert size={22} aria-hidden="true" />
           <div>
-            <h3>System health</h3>
-            <p>Current operational readiness for the scheduling environment.</p>
+            <strong>No active semester</strong>
+            <span>Classes and schedules are prepared for the active semester.</span>
           </div>
-        </div>
-<<<<<<< HEAD
-=======
-
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-        <div className="stats-grid">
-          <Stat
-            label="Platform Health"
-            value={`${healthScore}%`}
-            hint="Operational stability index"
-<<<<<<< HEAD
-            badge={<Badge tone={healthTone}>{healthLabel}</Badge>}
-          />
-          <Stat
-            label="Open Validation"
-            value={unresolvedValidation.count || 0}
-            hint="Unresolved schedule blockers"
-          />
-          <Stat
-            label="Approval Queue"
-            value={pendingRequests.count || 0}
-            hint="Pending admin review"
-          />
-        </div>
-      </section>
-      <section className="dashboard-quick-actions" aria-label="Quick actions">
-        <Link href="/admin/schedules" className="quick-action-card">
-          <span className="quick-action-icon">
-            <CalendarRange size={19} />
-          </span>
-          <span>
-            <strong>Review schedules</strong>
-            <small>Review submitted schedules and publish approved versions</small>
-          </span>
-          <ArrowRight size={17} />
-        </Link>
-        <Link href="/admin/import-export" className="quick-action-card">
-          <span className="quick-action-icon">
-            <Upload size={19} />
-          </span>
-          <span>
-            <strong>Import academic data</strong>
-            <small>Bring in reference and scheduling data</small>
-          </span>
-          <ArrowRight size={17} />
-        </Link>
-        <Link href="/admin/settings" className="quick-action-card">
-          <span className="quick-action-icon">
-            <Settings size={19} />
-          </span>
-          <span>
-            <strong>System settings</strong>
-            <small>Manage AlterSched configuration</small>
-          </span>
-          <ArrowRight size={17} />
-        </Link>
-      </section>
-      <section className="panel">
-        <div className="panel-header">
-          <div>
-            <h3>Recent Schedules</h3>
-            <p>Recently updated schedule records in the current CCTC deployment.</p>
-          </div>
-          <Link href="/admin/schedules" className="btn btn-outline">
-            View all
+          <Link className="btn btn-outline btn-sm" href="/admin/academic">
+            Set school year &amp; semester
           </Link>
-=======
-            icon={<Badge tone={healthTone}>{healthLabel}</Badge>}
-          />
-          <Stat label="Open Validation" value={unresolvedValidation.count || 0} hint="Unresolved schedule blockers" />
-          <Stat label="Approval Queue" value={pendingRequests.count || 0} hint="Pending admin review" />
-        </div>
-      </section>
+        </section>
+      )}
 
-      <section className="dashboard-quick-actions" aria-label="Quick actions">
-        <Link href="/admin/schedule-builder" className="quick-action-card"><span className="quick-action-icon"><CalendarRange size={19} /></span><span><strong>Build a schedule</strong><small>Create and validate a new schedule</small></span><ArrowRight size={17} /></Link>
-        <Link href="/admin/import-export" className="quick-action-card"><span className="quick-action-icon"><Upload size={19} /></span><span><strong>Import academic data</strong><small>Bring in reference and scheduling data</small></span><ArrowRight size={17} /></Link>
-        <Link href="/admin/settings" className="quick-action-card"><span className="quick-action-icon"><Settings size={19} /></span><span><strong>System settings</strong><small>Manage AlterSched configuration</small></span><ArrowRight size={17} /></Link>
-      </section>
+      <div className="stats-grid">
+        <Stat label="Instructors" value={instructors.count ?? 0} />
+        <Stat label="Rooms & labs" value={rooms.count ?? 0} />
+        <Stat label="Classes this semester" value={offerings.count ?? 0} />
+        <Stat label="Published schedules" value={published.count ?? 0} />
+      </div>
 
-      <section className="panel">
-        <div className="panel-header">
-          <div><h3>Recent Schedules</h3><p>Recently updated schedule records in the current CCTC deployment.</p></div>
-          <Link href="/admin/schedules" className="btn btn-outline">View all</Link>
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-        </div>
-        {recentSchedules.data?.length ? (
-          <div className="schedule-grid">
-            {recentSchedules.data.map((schedule) => (
-              <Link href="/admin/schedules" className="schedule-item" key={schedule.id}>
-                <strong>{schedule.title}</strong>
-                <span>
-<<<<<<< HEAD
-                  <Badge
-                    tone={
-                      schedule.status === 'published'
-                        ? 'success'
-                        : schedule.status === 'submitted'
-                          ? 'warning'
-                          : 'info'
-                    }
-                  >
-=======
-                  <Badge tone={schedule.status === 'published' ? 'success' : schedule.status === 'submitted' ? 'warning' : 'info'}>
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-                    {schedule.status}
-                  </Badge>
-                </span>
-              </Link>
-            ))}
+      <div className={styles.columns}>
+        <section className="panel">
+          <h3>Needs your attention</h3>
+          {open.length ? (
+            <ul className={styles.tasks}>
+              {open.map((task) => (
+                <li key={task.label}>
+                  <span className={styles.count}>{task.count}</span>
+                  <div>
+                    <strong>{task.label}</strong>
+                    <span>{task.detail}</span>
+                  </div>
+                  <Link href={task.href} className="btn btn-outline btn-sm">
+                    {task.action}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className={styles.clear}>
+              <CheckCircle2 size={20} aria-hidden="true" /> Nothing is waiting for you.
+            </p>
+          )}
+        </section>
+
+        <section className="panel">
+          <div className={styles.head}>
+            <h3>Recent schedules</h3>
+            <Link href="/admin/schedules">All schedules</Link>
           </div>
-<<<<<<< HEAD
-        ) : (
-          <Empty text="Schedules will appear here after they are created." />
-        )}
-      </section>
+          {recentSchedules.data?.length ? (
+            <ul className={styles.recent}>
+              {recentSchedules.data.map((schedule) => {
+                const stage = STAGES[schedule.status] ?? { label: schedule.status, tone: 'default' }
+                return (
+                  <li key={schedule.id}>
+                    <Link href={`/admin/schedules/${schedule.id}`}>
+                      {schedule.title || 'Untitled schedule'}
+                    </Link>
+                    <small>Updated {formatDate(schedule.updated_at)}</small>
+                    <Badge tone={stage.tone}>{stage.label}</Badge>
+                  </li>
+                )
+              })}
+            </ul>
+          ) : (
+            <p className="muted">
+              No schedules yet. The Department Scheduler generates them in the Schedule builder.
+            </p>
+          )}
+        </section>
+      </div>
     </>
   )
-=======
-        ) : <Empty text="Schedules will appear here after they are created." />}
-      </section>
-    </>
-  );
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
 }

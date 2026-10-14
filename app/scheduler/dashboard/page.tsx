@@ -1,369 +1,188 @@
-<<<<<<< HEAD
+import Link from 'next/link'
+import { CheckCircle2, CircleAlert, CircleDashed } from 'lucide-react'
 import { requireRole } from '@/lib/auth/require-role'
 import { createClient } from '@/lib/supabase/server'
-import { PageHead, Stat, Badge, Empty } from '@/components/ui'
+import { PageHead, Stat } from '@/components/ui'
 import { one } from '@/lib/relations'
 import styles from './page.module.css'
 
-export const revalidate = 60
+type StepState = 'done' | 'todo' | 'attention'
+
+type Step = {
+  title: string
+  detail: string
+  state: StepState
+  href: string
+  action: string
+}
+
+const ICONS = { done: CheckCircle2, todo: CircleDashed, attention: CircleAlert }
 
 export default async function Page() {
   const { profile } = await requireRole(['department_scheduler'])
-  const s = await createClient()
-=======
-import { requireRole } from '@/lib/auth/require-role';
-import { createClient } from '@/lib/supabase/server';
-import { PageHead, Stat, Badge, Empty } from '@/components/ui';
+  const supabase = await createClient()
 
-export const revalidate = 60;
+  const [departmentsResult, offeringsResult, schedulesResult, requestsResult, facultyResult] =
+    await Promise.all([
+      supabase
+        .from('scheduler_departments')
+        .select('department_id, departments(code, name)')
+        .eq('profile_id', profile.id)
+        .eq('active', true),
+      supabase.from('class_offerings').select('id, faculty_id').eq('status', 'active'),
+      supabase.from('schedules').select('id, status, current_version_id, published_version_id'),
+      supabase
+        .from('schedule_change_requests')
+        .select('id', { count: 'exact', head: true })
+        .eq('status', 'pending'),
+      supabase
+        .from('faculty_profiles')
+        .select(
+          'id, max_teaching_load, profiles!inner(full_name, account_status), faculty_availability(id), class_offerings(required_weekly_hours, status)'
+        )
+        .eq('profiles.account_status', 'approved'),
+    ])
 
-export default async function Page() {
-  const { profile } = await requireRole(['department_scheduler']);
-  const s = await createClient();
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-
-  const [
-    departmentsResult,
-    offeringsResult,
-    schedulesResult,
-    pendingRequestsResult,
-    facultyResult,
-  ] = await Promise.all([
-    s
-      .from('scheduler_departments')
-      .select('department_id,departments(code,name)')
-      .eq('profile_id', profile.id)
-      .eq('active', true),
-<<<<<<< HEAD
-=======
-
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-    s
-      .from('class_offerings')
-      .select('id,faculty_id,expected_students,required_weekly_hours,sections(code,capacity)')
-      .order('created_at', { ascending: false }),
-<<<<<<< HEAD
-    s.from('schedules').select('id', { count: 'exact', head: true }),
-=======
-
-    s.from('schedules').select('id', { count: 'exact', head: true }),
-
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-    s
-      .from('schedule_change_requests')
-      .select('id', { count: 'exact', head: true })
-      .eq('status', 'pending'),
-<<<<<<< HEAD
-    s
-      .from('faculty_profiles')
-      .select(
-        'id,employee_id,max_teaching_load,profiles(full_name),class_offerings(id,required_weekly_hours)'
-      )
-      .order('employee_id'),
-  ])
-
-  const departments = departmentsResult.data ?? []
+  const departments = (departmentsResult.data ?? [])
+    .map((row) => one(row.departments))
+    .filter(Boolean)
   const offerings = offeringsResult.data ?? []
-  const schedulesCount = schedulesResult.count ?? 0
-  const pendingRequestsCount = pendingRequestsResult.count ?? 0
-  const facultyRecords = facultyResult.data ?? []
-  const unassignedOfferings = offerings.filter((offering) => !offering.faculty_id)
+  const schedules = (schedulesResult.data ?? []).filter((item) => item.status !== 'archived')
+  const pendingRequests = requestsResult.count ?? 0
+  const faculty = facultyResult.data ?? []
 
-  const facultyOverloads = facultyRecords
-    .map((faculty) => {
-      const totalLoad = (faculty.class_offerings ?? []).reduce(
-        (sum: number, item: { required_weekly_hours: number | string | null }) =>
-          sum + Number(item.required_weekly_hours ?? 0),
-        0
-      )
+  const unassigned = offerings.filter((item) => !item.faculty_id).length
+  const withoutAvailability = faculty.filter((item) => !(item.faculty_availability ?? []).length)
+  const overloaded = faculty.filter((item) => {
+    const max = Number(item.max_teaching_load ?? 0)
+    const load = (item.class_offerings ?? [])
+      .filter((offering) => offering.status === 'active')
+      .reduce((total, offering) => total + Number(offering.required_weekly_hours ?? 0), 0)
+    return max > 0 && load > max
+  })
+  const drafts = schedules.filter((item) => item.status === 'draft')
+  const submitted = schedules.filter((item) => item.status === 'submitted').length
+  const published = schedules.filter((item) => item.published_version_id).length
 
-      return {
-        id: faculty.id,
-        name: one(faculty.profiles)?.full_name || faculty.employee_id || 'Unknown faculty',
-        totalLoad,
-        maxLoad: Number(faculty.max_teaching_load ?? 0),
-      }
-    })
-    .filter((item) => item.maxLoad > 0 && item.totalLoad > item.maxLoad)
-    .sort((a, b) => b.totalLoad - a.totalLoad)
-
-  const capacityRisks = offerings
-    .filter((offering) => {
-      const expected = Number(offering.expected_students ?? 0)
-      const sectionCapacity = Number(one(offering.sections)?.capacity ?? 0)
-      return sectionCapacity > 0 && expected > sectionCapacity
-    })
-    .slice(0, 5)
-=======
-
-    s
-      .from('faculty_profiles')
-      .select('id,employee_id,max_teaching_load,profiles(full_name),class_offerings(id,required_weekly_hours)')
-      .order('employee_id'),
-  ]);
-
-  const departments = departmentsResult.data ?? [];
-  const offerings = offeringsResult.data ?? [];
-  const schedulesCount = schedulesResult.count ?? 0;
-  const pendingRequestsCount = pendingRequestsResult.count ?? 0;
-  const facultyRecords = facultyResult.data ?? [];
-
-  const unassignedOfferings = offerings.filter((offering: any) => !offering.faculty_id);
-
-  const facultyOverloads = facultyRecords
-    .map((faculty: any) => {
-      const totalLoad = (faculty.class_offerings ?? []).reduce(
-        (sum: number, item: any) => sum + Number(item.required_weekly_hours ?? 0),
-        0
-      );
-
-      return {
-        id: faculty.id,
-        name: faculty.profiles?.[0]?.full_name || faculty.employee_id || 'Unknown faculty',
-        totalLoad,
-        maxLoad: Number(faculty.max_teaching_load ?? 0),
-      };
-    })
-    .filter((item) => item.maxLoad > 0 && item.totalLoad > item.maxLoad)
-    .sort((a, b) => b.totalLoad - a.totalLoad);
-
-  const capacityRisks = offerings
-    .filter((offering: any) => {
-      const expected = Number(offering.expected_students ?? 0);
-      const sectionCapacity = Number(offering.sections?.[0]?.capacity ?? 0);
-      return sectionCapacity > 0 && expected > sectionCapacity;
-    })
-    .slice(0, 5);
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-
-  const priorityItems = [
+  const steps: Step[] = [
     {
-      label: 'Unassigned offerings',
-      value: unassignedOfferings.length,
-      tone: 'warning' as const,
-      detail: 'Offerings still waiting for faculty assignment',
+      title: 'Check the classes and instructors',
+      detail: offerings.length
+        ? unassigned
+          ? `${unassigned} of ${offerings.length} classes have no instructor yet. They are assigned automatically when you generate.`
+          : `All ${offerings.length} classes have an instructor.`
+        : 'No classes yet. The Administrator prepares them from the curriculum.',
+      state: !offerings.length ? 'attention' : unassigned ? 'todo' : 'done',
+      href: '/scheduler/class-offerings',
+      action: 'Scheduling inputs',
     },
     {
-      label: 'Faculty overload risk',
-      value: facultyOverloads.length,
-      tone: 'danger' as const,
-      detail: 'Faculty load exceeds allowed max teaching hours',
+      title: 'Confirm instructor availability',
+      detail: withoutAvailability.length
+        ? `${withoutAvailability.length} instructor${withoutAvailability.length === 1 ? ' has' : 's have'} not entered availability, so their classes may be placed at any time.`
+        : 'Every instructor has entered their availability.',
+      state: withoutAvailability.length ? 'todo' : 'done',
+      href: '/scheduler/availability',
+      action: 'Availability',
     },
     {
-      label: 'Capacity risks',
-      value: capacityRisks.length,
-      tone: 'info' as const,
-      detail: 'Section demand exceeds room/section capacity',
+      title: 'Generate and review the timetable',
+      detail: drafts.length
+        ? `${drafts.length} draft schedule${drafts.length === 1 ? '' : 's'} ready to review and edit.`
+        : 'No draft yet. Generate the schedule to create one per block.',
+      state: drafts.length ? 'done' : 'todo',
+      href: '/scheduler/schedule-builder',
+      action: 'Schedule builder',
     },
-<<<<<<< HEAD
+    {
+      title: 'Submit for the Administrator to publish',
+      detail: submitted
+        ? `${submitted} schedule${submitted === 1 ? ' is' : 's are'} waiting for the Administrator.`
+        : drafts.length
+          ? 'Submit each draft when it has no conflicts.'
+          : 'Nothing to submit yet.',
+      state: drafts.length ? 'todo' : submitted || published ? 'done' : 'todo',
+      href: '/scheduler/schedules',
+      action: 'Schedules',
+    },
+    {
+      title: 'Answer schedule requests',
+      detail: pendingRequests
+        ? `${pendingRequests} request${pendingRequests === 1 ? '' : 's'} from instructors waiting for your decision.`
+        : 'No requests waiting.',
+      state: pendingRequests ? 'attention' : 'done',
+      href: '/scheduler/alterations',
+      action: 'Requests',
+    },
   ]
-
-  return (
-    <div className={styles.scope}>
-      <>
-        <PageHead
-          eyebrow="WORKSPACE"
-          title="Scheduler Dashboard"
-          description="Prepare department schedules, validate conflicts, and coordinate alteration requests."
-        />
-        <div className="stats-grid">
-          <Stat label="Assigned Departments" value={departments.length || 0} />
-          <Stat label="Class Offerings" value={offerings.length || 0} />
-          <Stat label="Schedules" value={schedulesCount} />
-          <Stat label="Pending Requests" value={pendingRequestsCount} />
-        </div>
-        <section className="panel">
-          <div className="panel-header">
-            <div>
-              <h3>Conflict watch</h3>
-              <p>Priority issues requiring review before publication.</p>
-            </div>
-          </div>
-          <div className="list-stack">
-            {priorityItems.map((item) => (
-              <div className="list-row" key={item.label}>
-                <div>
-                  <div className="list-row-title">{item.label}</div>
-                  <div className="list-row-meta">{item.detail}</div>
-                </div>
-                <Badge tone={item.tone}>{item.value}</Badge>
-              </div>
-            ))}
-          </div>
-        </section>
-        <div className="panel">
-          <div className="panel-header">
-            <div>
-              <h3>Most urgent flags</h3>
-              <p>Current issues most likely to block a clean draft.</p>
-            </div>
-          </div>
-          {facultyOverloads.length || unassignedOfferings.length || capacityRisks.length ? (
-            <div className="list-stack">
-              {facultyOverloads.slice(0, 3).map((item) => (
-                <div className="list-card" key={item.id}>
-                  <div className="list-card-head">
-                    <strong>{item.name}</strong>
-                    <Badge tone="danger">
-                      {item.totalLoad}h / {item.maxLoad}h
-                    </Badge>
-                  </div>
-                  <div className="list-card-meta">Faculty load exceeds approved maximum.</div>
-                </div>
-              ))}
-              {unassignedOfferings.slice(0, 3).map((offering) => (
-                <div className="list-card" key={offering.id}>
-                  <div className="list-card-head">
-                    <strong>{one(offering.sections)?.code || 'Offering'}</strong>
-                    <Badge tone="warning">Unassigned</Badge>
-                  </div>
-                  <div className="list-card-meta">
-                    {offering.expected_students ?? 0} expected class size waiting for assignment.
-                  </div>
-                </div>
-              ))}
-              {capacityRisks.slice(0, 3).map((offering) => (
-                <div className="list-card" key={offering.id}>
-                  <div className="list-card-head">
-                    <strong>{one(offering.sections)?.code || 'Section'}</strong>
-                    <Badge tone="info">
-                      {offering.expected_students ?? 0} / {one(offering.sections)?.capacity ?? 0}
-                    </Badge>
-                  </div>
-                  <div className="list-card-meta">
-                    Enrollment exceeds section capacity and needs review.
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <Empty text="No conflict flags detected in the current scheduling data." />
-          )}
-        </div>
-        <div className="panel">
-          <h3>Assigned Scope</h3>
-          <p className="muted">
-            {departments
-              .map((item) => one(item.departments)?.code)
-              .filter(Boolean)
-              .join(', ') || 'No active department assignment.'}
-          </p>
-        </div>
-      </>
-    </div>
-  )
-=======
-  ];
 
   return (
     <>
       <PageHead
-        eyebrow="WORKSPACE"
-        title="Scheduler Dashboard"
-        description="Prepare department schedules, validate conflicts, and coordinate alteration requests."
+        title="Dashboard"
+        description={`Scheduling for ${
+          departments.map((item) => item!.name).join(', ') || 'your department'
+        }.`}
+        actions={
+          <Link href="/scheduler/schedule-builder" className="btn btn-primary">
+            Open schedule builder
+          </Link>
+        }
       />
 
       <div className="stats-grid">
-        <Stat label="Assigned Departments" value={departments.length || 0} />
-        <Stat label="Class Offerings" value={offerings.length || 0} />
-        <Stat label="Schedules" value={schedulesCount} />
-        <Stat label="Pending Requests" value={pendingRequestsCount} />
+        <Stat label="Classes" value={offerings.length} />
+        <Stat label="Without instructor" value={unassigned} />
+        <Stat label="Draft schedules" value={drafts.length} />
+        <Stat label="Published schedules" value={published} />
+        <Stat label="Pending requests" value={pendingRequests} />
       </div>
 
       <section className="panel">
-        <div className="panel-header">
-          <div>
-            <h3>Conflict watch</h3>
-            <p>Priority issues requiring review before publication.</p>
-          </div>
-        </div>
-
-        <div style={{ display: 'grid', gap: '12px' }}>
-          {priorityItems.map((item) => (
-            <div
-              key={item.label}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: '12px',
-                padding: '12px 14px',
-                border: '1px solid var(--line)',
-                borderRadius: '10px',
-                background: 'rgba(255,255,255,0.02)',
-              }}
-            >
-              <div>
-                <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-soft)', marginBottom: '3px' }}>
-                  {item.label}
+        <h3>Next steps</h3>
+        <ol className={styles.steps}>
+          {steps.map((step) => {
+            const Icon = ICONS[step.state]
+            return (
+              <li key={step.title} className={styles[step.state]}>
+                <Icon className={styles.icon} size={22} strokeWidth={2} aria-hidden="true" />
+                <div className={styles.copy}>
+                  <strong>{step.title}</strong>
+                  <span>{step.detail}</span>
                 </div>
-                <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{item.detail}</div>
-              </div>
-
-              <Badge tone={item.tone}>{item.value}</Badge>
-            </div>
-          ))}
-        </div>
+                <Link href={step.href} className="btn btn-outline btn-sm">
+                  {step.action}
+                </Link>
+              </li>
+            )
+          })}
+        </ol>
       </section>
 
-      <div className="panel">
-        <div className="panel-header">
-          <div>
-            <h3>Most urgent flags</h3>
-            <p>Current issues most likely to block a clean draft.</p>
-          </div>
-        </div>
-
-        {facultyOverloads.length || unassignedOfferings.length || capacityRisks.length ? (
-          <div style={{ display: 'grid', gap: '12px' }}>
-            {facultyOverloads.slice(0, 3).map((item) => (
-              <div key={item.id} style={{ padding: '10px 12px', border: '1px solid var(--line)', borderRadius: '8px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
-                  <strong>{item.name}</strong>
-                  <Badge tone="danger">{item.totalLoad}h / {item.maxLoad}h</Badge>
-                </div>
-                <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
-                  Faculty load exceeds approved maximum.
-                </div>
-              </div>
-            ))}
-
-            {unassignedOfferings.slice(0, 3).map((offering: any) => (
-              <div key={offering.id} style={{ padding: '10px 12px', border: '1px solid var(--line)', borderRadius: '8px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
-                  <strong>{offering.sections?.[0]?.code || 'Offering'}</strong>
-                  <Badge tone="warning">Unassigned</Badge>
-                </div>
-                <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
-                  {offering.expected_students ?? 0} expected students waiting for assignment.
-                </div>
-              </div>
-            ))}
-
-            {capacityRisks.slice(0, 3).map((offering: any) => (
-              <div key={offering.id} style={{ padding: '10px 12px', border: '1px solid var(--line)', borderRadius: '8px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
-                  <strong>{offering.sections?.[0]?.code || 'Section'}</strong>
-                  <Badge tone="info">{offering.expected_students ?? 0} / {offering.sections?.[0]?.capacity ?? 0}</Badge>
-                </div>
-                <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
-                  Enrollment exceeds section capacity and needs review.
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <Empty text="No conflict flags detected in the current scheduling data." />
-        )}
-      </div>
-
-      <div className="panel">
-        <h3>Assigned Scope</h3>
-        <p className="muted">
-          {departments.map((item: any) => item.departments?.[0]?.code).filter(Boolean).join(', ') || 'No active department assignment.'}
-        </p>
-      </div>
+      {overloaded.length > 0 && (
+        <section className="panel">
+          <h3>Instructors over their maximum load</h3>
+          <p className="muted">
+            Their assigned class hours are above the limit the Administrator set. Move a class to
+            another instructor in Scheduling inputs.
+          </p>
+          <ul className={styles.overload}>
+            {overloaded.map((item) => {
+              const load = (item.class_offerings ?? [])
+                .filter((offering) => offering.status === 'active')
+                .reduce((total, offering) => total + Number(offering.required_weekly_hours ?? 0), 0)
+              return (
+                <li key={item.id}>
+                  <strong>{one(item.profiles)?.full_name ?? 'Instructor'}</strong>
+                  <span>
+                    {load} h assigned · maximum {Number(item.max_teaching_load)} h
+                  </span>
+                </li>
+              )
+            })}
+          </ul>
+        </section>
+      )}
     </>
-  );
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
+  )
 }

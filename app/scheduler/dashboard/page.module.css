@@ -1,50 +1,86 @@
-.scope {
-  display: contents;
-}
-
-.scope :global(.list-stack) {
+.steps {
   display: grid;
-  gap: 12px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
 }
 
-.scope :global(.list-row) {
-  display: flex;
+.steps li {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 14px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: #fbfcfe;
+  gap: 14px;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
 }
 
-.scope :global(.list-row-title) {
-  font-size: 12px;
-  font-weight: 700;
+.steps li:first-child {
+  border-top: 0;
+}
+
+.icon {
+  color: var(--muted);
+}
+
+.done .icon {
+  color: var(--success);
+}
+
+.attention .icon {
+  color: #c58612;
+}
+
+.copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.copy strong {
+  color: var(--text);
+  font-size: 14.5px;
+}
+
+.done .copy strong {
   color: var(--text-soft);
-  margin-bottom: 3px;
 }
 
-.scope :global(.list-row-meta) {
-  font-size: 12px;
+.copy span {
   color: var(--muted);
+  font-size: 13.5px;
 }
 
-.scope :global(.list-card) {
-  padding: 10px 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-}
-
-.scope :global(.list-card-head) {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.overload {
+  display: grid;
   gap: 8px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
 }
 
-.scope :global(.list-card-meta) {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 4px;
+.overload li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px 12px;
+  padding: 10px 12px;
+  border: 1px solid #f0d49c;
+  border-radius: var(--radius-sm);
+  background: var(--warning-soft);
+}
+
+.overload span {
+  color: #6f420a;
+  font-size: 13.5px;
+}
+
+@media (max-width: 600px) {
+  .steps li {
+    grid-template-columns: 26px minmax(0, 1fr);
+  }
+
+  .steps li > :global(.btn) {
+    grid-column: 2;
+    justify-self: start;
+  }
 }

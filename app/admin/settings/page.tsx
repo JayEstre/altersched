@@ -1,7 +1,6 @@
-<<<<<<< HEAD
 import { createClient } from '@/lib/supabase/server'
 import { DataTable } from '@/components/data-table'
-import { ActionResult, PageHead, Panel, Stat, Empty } from '@/components/ui'
+import { ActionResult, PageHead, Panel, Empty } from '@/components/ui'
 import { DAY_NAMES } from '@/lib/format'
 import { SLOT_OPTIONS, loadSchedulingSettings } from '@/lib/scheduling/settings'
 import { saveSchedulingSettings } from './actions'
@@ -24,24 +23,19 @@ const GENERATOR_SUCCESS = {
 export default async function Page({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams
   const s = await createClient()
-  const [
-    { data: institutions },
-    { data: years },
-    { data: semesters },
-    { count: departments },
-    { count: programs },
-    generator,
-  ] = await Promise.all([
-    s.from('institutions').select('id,name,short_name').order('name'),
-    s.from('academic_years').select('id,name,is_active').order('start_date', { ascending: false }),
-    s
-      .from('semesters')
-      .select('id,name,is_active,academic_years(name)')
-      .order('start_date', { ascending: false }),
-    s.from('departments').select('id', { count: 'exact', head: true }),
-    s.from('programs').select('id', { count: 'exact', head: true }),
-    loadSchedulingSettings(s),
-  ])
+  const [{ data: institutions }, { data: years }, { data: semesters }, generator] =
+    await Promise.all([
+      s.from('institutions').select('id,name,short_name').order('name'),
+      s
+        .from('academic_years')
+        .select('id,name,is_active')
+        .order('start_date', { ascending: false }),
+      s
+        .from('semesters')
+        .select('id,name,is_active,academic_years(name)')
+        .order('start_date', { ascending: false }),
+      loadSchedulingSettings(s),
+    ])
   const activeYear = years?.find((x) => x.is_active)
   const activeTerm = semesters?.find((x) => x.is_active)
 
@@ -49,21 +43,14 @@ export default async function Page({ searchParams }: { searchParams: SearchParam
     <div className={styles.scope}>
       <div className="page-stack">
         <PageHead
-          eyebrow="SYSTEM"
           title="Settings"
-          description="Academic context, institution records and the hours the schedule generator may use."
+          description="The days and hours the schedule generator may use, and the school records behind the system."
         />
         <ActionResult
           params={params}
           successMessages={GENERATOR_SUCCESS}
           errorMessages={GENERATOR_ERRORS}
         />
-        <div className="stats-grid">
-          <Stat label="Institutions" value={institutions?.length || 0} />
-          <Stat label="Departments" value={departments || 0} />
-          <Stat label="Programs" value={programs || 0} />
-          <Stat label="Academic Years" value={years?.length || 0} />
-        </div>
 
         <section id="generator">
           <Panel
@@ -170,13 +157,3 @@ export default async function Page({ searchParams }: { searchParams: SearchParam
     </div>
   )
 }
-=======
-import {createClient} from '@/lib/supabase/server';
-import { DataTable } from '@/components/data-table';
-import {PageHead,Stat,Empty} from '@/components/ui'
-export default async function Page(){const s=await createClient();
-const [{data:institutions},{data:years},{data:semesters},{count:departments},{count:programs}]=await Promise.all([s.from('institutions').select('id,name,code').order('name'),s.from('academic_years').select('id,name,is_active').order('start_date',{ascending:false}),s.from('semesters').select('id,name,is_active,academic_years(name)').order('start_date',{ascending:false}),s.from('departments').select('id',{count:'exact',head:true}),s.from('programs').select('id',{count:'exact',head:true})]);
-const activeYear=years?.find((x:any)=>x.is_active);
-const activeTerm=semesters?.find((x:any)=>x.is_active);
-return <><PageHead eyebrow="SYSTEM" title="Settings" description="Live deployment and academic-context information. Academic records are maintained through Academic Setup."/><div className="stats-grid"><Stat label="Institutions" value={institutions?.length||0}/><Stat label="Departments" value={departments||0}/><Stat label="Programs" value={programs||0}/><Stat label="Academic Years" value={years?.length||0}/></div><div className="panel"><h3>Active Academic Context</h3>{activeYear||activeTerm?<div className="schedule-grid"><div className="schedule-item"><strong>{activeYear?.name||'No active academic year'}</strong><span>{activeTerm?.name||'No active semester'}</span></div></div>:<Empty text="No active academic year or semester configured."/>}</div><div className="panel"><h3>Institution Records</h3>{institutions?.length?<DataTable><thead><tr><th>Code</th><th>Name</th></tr></thead><tbody>{institutions.map((x:any)=><tr key={x.id}><td>{x.code||'—'}</td><td>{x.name}</td></tr>)}</tbody></DataTable>:<Empty text="No institution configured."/>}</div></>}
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf

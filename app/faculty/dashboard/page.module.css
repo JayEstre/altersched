@@ -1,94 +1,152 @@
-.scope {
-  display: contents;
-}
-
-.scope :global(.faculty-info-grid) {
+.columns {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 10px;
-  margin-top: 16px;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 20px;
 }
 
-.scope :global(.faculty-info-card) {
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 11px 13px;
-  min-width: 0;
-}
-
-.scope :global(.faculty-info-card span) {
-  display: block;
-  margin-bottom: 4px;
-  color: var(--muted);
-  font-size: 11.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-}
-
-.scope :global(.faculty-info-card strong) {
-  display: block;
-  font-size: 14px;
-  word-break: break-word;
-}
-
-.scope :global(.faculty-section-head) {
+.panelHead {
   display: flex;
+  align-items: baseline;
   justify-content: space-between;
-  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.panelHead a {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.today {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.today li {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
   gap: 14px;
-  flex-wrap: wrap;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
 }
 
-.scope :global(.faculty-section-head h3) {
-  margin-top: 5px;
-  margin-bottom: 4px;
+.today li:first-child {
+  border-top: 0;
+  padding-top: 4px;
 }
 
-.scope :global(.faculty-section-head p) {
+.time {
+  display: grid;
+  color: var(--navy);
+  font-size: 15px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.time small {
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.classInfo {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  padding-left: 14px;
+  border-left: 3px solid var(--gold);
+}
+
+.classInfo strong {
+  color: var(--text);
+  font-size: 14.5px;
+}
+
+.classInfo strong span {
+  color: var(--text-soft);
+  font-weight: 500;
+}
+
+.classInfo small {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.notices {
+  display: grid;
   margin: 0;
-  max-width: 680px;
+  padding: 0;
+  list-style: none;
 }
 
-.scope :global(.faculty-actions) {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 15px;
+.notices li {
+  display: grid;
+  gap: 2px;
+  padding: 10px 0 10px 12px;
+  border-left: 3px solid transparent;
 }
 
-@media (max-width: 640px) {
-  .scope :global(.faculty-info-card) {
-    padding: 10px 12px;
-  }
-
-  .scope :global(.faculty-actions .user-btn) {
-    width: 100%;
-    justify-content: center;
-  }
+.notices li + li {
+  border-top: 1px solid var(--line);
 }
 
-.scope :global(.block-gap-y) {
-  margin-top: 16px;
-  margin-bottom: 16px;
+.notices li.unread {
+  border-left-color: var(--accent);
 }
 
-.scope :global(.split-head) {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+.notices strong {
+  font-size: 13.5px;
+}
+
+.notices span {
+  color: var(--text-soft);
+  font-size: 13px;
+}
+
+.notices time {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.quiet {
+  padding: 18px 0 8px;
+  color: var(--muted);
+}
+
+.profile {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
-  flex-wrap: wrap;
 }
 
-.scope :global(.tight-text) {
-  margin-top: 6px;
-  margin-bottom: 5px;
+.profile div {
+  display: grid;
+  gap: 3px;
 }
 
-.scope :global(.flush) {
-  margin: 0;
+.profile span {
+  color: var(--muted);
+  font-size: 13px;
 }
 
-.scope :global(.block-gap) {
-  margin-bottom: 16px;
+.profile strong {
+  font-size: 14px;
+}
+
+.profile a {
+  margin-left: 4px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .profile {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }

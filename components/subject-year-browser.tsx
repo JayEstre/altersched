@@ -67,10 +67,10 @@ type Props = {
   assignAction: ServerAction
 }
 
-/** Remembers the open year/block across the page reload that follows a save. */
+/** Remembers the open year and subject across the page reload that follows a save. */
 const VIEW_KEY = 'altersched:subject-catalog-view'
 
-type SavedView = { year: number; block: string | null }
+type SavedView = { year: number; subject: string | null }
 
 function readSavedRaw(): string | null {
   try {
@@ -99,9 +99,9 @@ function forgetView() {
 
 const noSubscription = () => () => {}
 
-function saveView(year: number, block: string | null) {
+function saveView(year: number, subject: string | null) {
   try {
-    window.sessionStorage.setItem(VIEW_KEY, JSON.stringify({ year, block }))
+    window.sessionStorage.setItem(VIEW_KEY, JSON.stringify({ year, subject }))
   } catch {
     // Storage unavailable (private mode): the dialog simply stays closed after saving.
   }
@@ -147,18 +147,20 @@ export function SubjectYearBrowser({
   // The saved view is only used together with that save's result message (flash).
   const savedRaw = useSyncExternalStore(noSubscription, readSavedRaw, () => null)
   const saved = flash ? parseView(savedRaw) : null
-  const [picked, setPicked] = useState<SavedView | null>(null)
+  const [picked, setPicked] = useState<number | null>(null)
   const [query, setQuery] = useState('')
 
-  const year = picked?.year ?? saved?.year ?? 1
-  const blockId = picked ? picked.block : (saved?.block ?? null)
-  const reopen = !picked && Boolean(saved)
+  const year = picked ?? saved?.year ?? 1
+  const reopen = picked === null && Boolean(saved)
+  const reopenSubject = reopen ? (saved?.subject ?? null) : null
 
   const inYear = subjects.filter((subject) => yearOf(subject) === year)
   const yearBlocks = blocks.filter((block) => block.year === year)
-  const block = yearBlocks.find((item) => item.id === blockId) ?? null
-  const classBySubject = new Map(
-    classes.filter((item) => item.sectionId === block?.id).map((item) => [item.subjectId, item])
+  const yearBlockIds = new Set(yearBlocks.map((block) => block.id))
+  const yearClasses = classes.filter((item) => yearBlockIds.has(item.sectionId))
+  const assignedCount = yearClasses.filter((item) => item.facultyId).length
+  const blocksWithoutClasses = yearBlocks.filter(
+    (block) => !yearClasses.some((item) => item.sectionId === block.id)
   )
   const needle = query.trim().toLowerCase()
   const visible = needle
@@ -166,30 +168,22 @@ export function SubjectYearBrowser({
         `${subject.code} ${subject.name} ${subject.description}`.toLowerCase().includes(needle)
       )
     : inYear
-  const mustPickBlock = yearBlocks.length > 0 && !block
 
   function chooseYear(value: number) {
     forgetView()
-    setPicked({ year: value, block: null })
+    setQuery('')
+    setPicked(value)
   }
 
-  function chooseBlock(value: string) {
-    forgetView()
-    setPicked({ year, block: value })
-  }
-
-  function blockStats(id: string) {
-    const blockClasses = classes.filter((item) => item.sectionId === id)
-    return {
-      total: blockClasses.length,
-      assigned: blockClasses.filter((item) => item.facultyId).length,
-    }
+  /** Remember which subject was being edited so it reopens after the save. */
+  function rememberSubject(event: FormEvent<HTMLDivElement>) {
+    const card = (event.target as HTMLElement).closest('[data-subject-id]')
+    saveView(year, card?.getAttribute('data-subject-id') ?? null)
   }
 
   return (
     <section className="panel as-browser">
       <header className="as-browser-header">
-        <span className="section-kicker">SUBJECT CATALOG</span>
         <h2>Browse Subjects by Year</h2>
         <p className="muted">Select a year level to view and edit its official subjects.</p>
       </header>
@@ -216,24 +210,21 @@ export function SubjectYearBrowser({
       </div>
       <div className="as-browser-controls">
         <span className="muted">
-          {inYear.length} subjects · {yearBlocks.length} blocks in {yearLabel(year)}
+          {inYear.length} {inYear.length === 1 ? 'subject' : 'subjects'} · {yearBlocks.length}{' '}
+          {yearBlocks.length === 1 ? 'block' : 'blocks'} in {yearLabel(year)}
         </span>
         <GlassModal
           key={year}
           defaultOpen={reopen}
           onClose={forgetView}
-          title={block ? `${yearLabel(year)} · Block ${block.code}` : `${yearLabel(year)} Subjects`}
-          description={
-            yearBlocks.length
-              ? `Choose a block, then click a subject to edit it${
-                  semesterName ? ` · instructors for ${semesterName}` : ''
-                }`
-              : 'Official BSIT subject catalog · click a subject to edit it'
-          }
+          title={`${yearLabel(year)} Subjects`}
+          description={`Click a subject to see its instructor in each block and to edit it${
+            semesterName ? ` · ${semesterName}` : ''
+          }`}
           trigger="View Subjects"
           wide
         >
-          <div className={styles.body} onSubmitCapture={() => saveView(year, block?.id ?? null)}>
+          <div className={styles.body} onSubmitCapture={rememberSubject}>
             {saved && flash && (
               <div
                 className={flash.tone === 'success' ? styles.flashSuccess : styles.flashDanger}
@@ -244,88 +235,49 @@ export function SubjectYearBrowser({
               </div>
             )}
 
-            {!mustPickBlock && (
-              <div className={styles.toolbar}>
-                {yearBlocks.length > 0 && (
-                  <div className={styles.blockBar} role="group" aria-label="Block">
-                    <span className={styles.blockLabel}>Block</span>
-                    {yearBlocks.map((item) => {
-                      const stats = blockStats(item.id)
-                      const selected = item.id === block?.id
-                      return (
-                        <button
-                          key={item.id}
-                          type="button"
-                          className={selected ? styles.blockChipActive : styles.blockChip}
-                          aria-pressed={selected}
-                          onClick={() => chooseBlock(item.id)}
-                          title={`${stats.assigned} of ${stats.total} classes have an instructor`}
-                        >
-                          {item.code}
-                          {stats.total > 0 && stats.assigned < stats.total && (
-                            <i className={styles.blockDot} aria-label="needs an instructor" />
-                          )}
-                        </button>
-                      )
-                    })}
-                  </div>
-                )}
-                {!mustPickBlock && (
-                  <div className={styles.searchRow}>
-                    <input
-                      type="search"
-                      className={styles.search}
-                      placeholder="Search code, name or description"
-                      aria-label="Search subjects"
-                      value={query}
-                      onChange={(event) => setQuery(event.target.value)}
-                    />
-                    <span className={styles.count}>
-                      {visible.length} of {inYear.length}{' '}
-                      {inYear.length === 1 ? 'subject' : 'subjects'}
-                    </span>
-                  </div>
+            <div className={styles.toolbar}>
+              <div className={styles.searchRow}>
+                <input
+                  type="search"
+                  className={styles.search}
+                  placeholder="Search code, name or description"
+                  aria-label="Search subjects"
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                />
+                <span className={styles.count}>
+                  {visible.length} of {inYear.length} {inYear.length === 1 ? 'subject' : 'subjects'}
+                  {yearClasses.length > 0 &&
+                    ` · ${assignedCount} of ${yearClasses.length} classes have an instructor`}
+                </span>
+              </div>
+            </div>
+
+            {yearBlocks.length > 0 && blocksWithoutClasses.length > 0 && (
+              <div className={styles.blockNotice}>
+                <div>
+                  <strong>
+                    {blocksWithoutClasses.length === yearBlocks.length
+                      ? `No classes yet for ${yearLabel(year)}`
+                      : `Block ${blocksWithoutClasses.map((block) => block.code).join(', ')} ${
+                          blocksWithoutClasses.length === 1 ? 'has' : 'have'
+                        } no classes yet`}
+                  </strong>
+                  <span>
+                    Instructors are assigned per class. Create this semester&apos;s classes from the
+                    curriculum{semesterName ? ` (${semesterName})` : ''}; existing classes and their
+                    instructors are kept.
+                  </span>
+                </div>
+                {prepare ? (
+                  <PrepareButton prepare={prepare} label="Prepare classes now" />
+                ) : (
+                  <Link href="/admin/class-offerings">Open Class Offerings</Link>
                 )}
               </div>
             )}
 
-            {mustPickBlock ? (
-              <>
-                {prepare && yearBlocks.some((item) => blockStats(item.id).total === 0) && (
-                  <div className={styles.blockNotice}>
-                    <div>
-                      <strong>Some blocks have no classes yet</strong>
-                      <span>
-                        Create the missing classes for every block from the curriculum. Existing
-                        classes and their instructors are kept.
-                      </span>
-                    </div>
-                    <PrepareButton prepare={prepare} label="Prepare missing classes" />
-                  </div>
-                )}
-                <div className={styles.pickGrid}>
-                  {yearBlocks.map((item) => {
-                    const stats = blockStats(item.id)
-                    return (
-                      <button
-                        key={item.id}
-                        type="button"
-                        className={styles.pickCard}
-                        onClick={() => chooseBlock(item.id)}
-                      >
-                        <span className={styles.pickCode}>{item.code}</span>
-                        <strong>Block {item.code}</strong>
-                        <small>
-                          {stats.total
-                            ? `${stats.assigned} of ${stats.total} classes have an instructor`
-                            : 'No classes prepared yet'}
-                        </small>
-                      </button>
-                    )
-                  })}
-                </div>
-              </>
-            ) : visible.length === 0 ? (
+            {visible.length === 0 ? (
               <div className={styles.empty}>
                 <strong>{inYear.length ? 'No matching subjects' : 'No subjects yet'}</strong>
                 <span>
@@ -336,34 +288,17 @@ export function SubjectYearBrowser({
               </div>
             ) : (
               <div className={styles.list}>
-                {block && classBySubject.size === 0 && (
-                  <div className={styles.blockNotice}>
-                    <div>
-                      <strong>Block {block.code} has no classes yet</strong>
-                      <span>
-                        Instructors are assigned per class. Create this semester&apos;s classes from
-                        the curriculum
-                        {semesterName ? ` (${semesterName})` : ''}; existing classes are kept.
-                      </span>
-                    </div>
-                    {prepare ? (
-                      <PrepareButton prepare={prepare} label="Prepare classes now" />
-                    ) : (
-                      <Link href="/admin/class-offerings">Open Class Offerings</Link>
-                    )}
-                  </div>
-                )}
                 {visible.map((subject) => (
                   <SubjectCard
                     // Remount after a successful save so the "Unsaved" state resets.
-                    key={`${block?.id ?? 'all'}:${subject.id}:${subject.code}:${subject.name}:${subject.description}:${subject.units}:${subject.lecture}:${subject.lab}:${subject.year}:${subject.roomTypeId}:${subject.facultyId}:${subject.isActive}`}
+                    key={`${subject.id}:${subject.code}:${subject.name}:${subject.description}:${subject.units}:${subject.lecture}:${subject.lab}:${subject.year}:${subject.roomTypeId}:${subject.facultyId}:${subject.isActive}`}
                     subject={subject}
                     roomTypes={roomTypes}
                     instructors={instructors}
                     qualifiedIds={qualifications[subject.id] ?? []}
-                    block={block}
-                    blockClass={block ? (classBySubject.get(subject.id) ?? null) : undefined}
-                    semesterName={semesterName}
+                    blocks={yearBlocks}
+                    classes={yearClasses.filter((item) => item.subjectId === subject.id)}
+                    startOpen={subject.id === reopenSubject}
                     updateAction={updateAction}
                     statusAction={statusAction}
                     deleteAction={deleteAction}
@@ -384,9 +319,9 @@ function SubjectCard({
   roomTypes,
   instructors,
   qualifiedIds,
-  block,
-  blockClass,
-  semesterName,
+  blocks,
+  classes,
+  startOpen,
   updateAction,
   statusAction,
   deleteAction,
@@ -396,10 +331,12 @@ function SubjectCard({
   roomTypes: Option[]
   instructors: Option[]
   qualifiedIds: string[]
-  block: Block | null
-  /** undefined: no block chosen (years without blocks); null: not offered in this block. */
-  blockClass: BlockClass | null | undefined
-  semesterName: string | null
+  /** Blocks of this year level. */
+  blocks: Block[]
+  /** This subject's classes (one per block) this semester. */
+  classes: BlockClass[]
+  /** Open after a save, so the user carries on where they were. */
+  startOpen: boolean
   updateAction: ServerAction
   statusAction: ServerAction
   deleteAction: ServerAction
@@ -439,7 +376,8 @@ function SubjectCard({
   return (
     <details
       className={subject.isActive ? styles.card : `${styles.card} ${styles.cardInactive}`}
-      open={dirty || undefined}
+      open={dirty || startOpen || undefined}
+      data-subject-id={subject.id}
     >
       <summary className={styles.summaryRow}>
         <span className={styles.code}>{subject.code}</span>
@@ -471,7 +409,7 @@ function SubjectCard({
               </span>
             )
           )}
-          {blockClass !== undefined && <TeacherPill blockClass={blockClass} />}
+          {blocks.length > 0 && <TeacherSummary blocks={blocks} classes={classes} />}
           {dirty && <span className={styles.badgeDirty}>Unsaved</span>}
           <span className={subject.isActive ? styles.badgeActive : styles.badgeInactive}>
             {subject.isActive ? 'Active' : 'Inactive'}
@@ -479,15 +417,20 @@ function SubjectCard({
         </span>
         <span className={styles.chevron} aria-hidden="true" />
       </summary>
+      {blocks.length > 0 && (
+        <BlockInstructors
+          blocks={blocks}
+          classes={classes}
+          subjectCode={subject.code}
+          assignAction={assignAction}
+        />
+      )}
+
       <form id={formId} action={updateAction} onInput={trackHours} className={styles.form}>
         <input type="hidden" name="subject_id" value={subject.id} />
         <input type="hidden" name="department_id" value={subject.departmentId} />
 
-        {block && (
-          <p className={styles.sharedNote}>
-            Subject details below are shared by every block. Only the instructor is per block.
-          </p>
-        )}
+        <h4 className={styles.sectionTitle}>Subject details</h4>
         <div className={styles.titleRow}>
           <div className={styles.codeField}>
             <label htmlFor={field('code')}>Code</label>
@@ -623,16 +566,6 @@ function SubjectCard({
         </div>
       </form>
 
-      {block && blockClass !== undefined && (
-        <BlockInstructor
-          block={block}
-          blockClass={blockClass}
-          subjectCode={subject.code}
-          semesterName={semesterName}
-          assignAction={assignAction}
-        />
-      )}
-
       <footer className={styles.footer}>
         <span className={styles.summary}>
           {hours.lecture + hours.lab} h per week
@@ -661,98 +594,124 @@ function SubjectCard({
   )
 }
 
-function TeacherPill({ blockClass }: { blockClass: BlockClass | null }) {
-  if (!blockClass) return <span className={styles.teacherMuted}>Not offered</span>
-  if (!blockClass.facultyId) return <span className={styles.teacherMissing}>No instructor</span>
+/** One-line instructor summary on the closed card, e.g. "Art Dakay · all 6 blocks". */
+function TeacherSummary({ blocks, classes }: { blocks: Block[]; classes: BlockClass[] }) {
+  if (!classes.length) return <span className={styles.teacherMuted}>No classes yet</span>
+  const assigned = classes.filter((item) => item.facultyId)
+  const names = [...new Set(assigned.map((item) => item.facultyName ?? 'Instructor'))]
+  if (assigned.length < blocks.length) {
+    return (
+      <span className={styles.teacherMissing}>
+        {assigned.length} of {blocks.length} blocks have an instructor
+      </span>
+    )
+  }
   return (
     <span className={styles.teacher}>
-      {blockClass.facultyName}
-      <em>{blockClass.mode === 'manual' ? 'Manual' : 'Auto'}</em>
+      {names.length === 1 ? names[0] : `${names.length} instructors`}
+      <em>{blocks.length === 1 ? '1 block' : `all ${blocks.length} blocks`}</em>
     </span>
   )
 }
 
-/** Change who teaches this subject in the selected block (lecture and lab together). */
-function BlockInstructor({
-  block,
-  blockClass,
+/** Who teaches this subject in each block; each row saves on its own (lecture and lab together). */
+function BlockInstructors({
+  blocks,
+  classes,
   subjectCode,
-  semesterName,
   assignAction,
 }: {
-  block: Block
-  blockClass: BlockClass | null
+  blocks: Block[]
+  classes: BlockClass[]
   subjectCode: string
-  semesterName: string | null
   assignAction: ServerAction
 }) {
-  if (!blockClass) {
-    return (
-      <div className={styles.blockSection}>
-        <div>
-          <strong>Instructor for Block {block.code}</strong>
-          <span>
-            {subjectCode} has no class for Block {block.code}
-            {semesterName ? ` in ${semesterName}` : ''} yet.{' '}
-            <Link href="/admin/class-offerings">Prepare class offerings</Link> first.
-          </span>
-        </div>
-      </div>
-    )
-  }
-
+  const bySection = new Map(classes.map((item) => [item.sectionId, item]))
   return (
-    <form action={assignAction} className={styles.blockSection}>
-      <div>
-        <strong>
-          Instructor for Block {block.code}
-          {semesterName ? ` · ${semesterName}` : ''}
-        </strong>
-        <span>Applies to the lecture and lab of this block. Saved changes are marked Manual.</span>
+    <section className={styles.blockSection} aria-label={`Instructors for ${subjectCode}`}>
+      <div className={styles.blockSectionHead}>
+        <h4 className={styles.sectionTitle}>Instructor per block</h4>
+        <span>Applies to the lecture and lab of that block. Saved changes are marked Manual.</span>
       </div>
-      <input type="hidden" name="offering_id" value={blockClass.offeringId} />
-      <input type="hidden" name="return_to" value="/admin/subjects" />
-      <div className={styles.blockAssign}>
-        {blockClass.candidates.length ? (
-          <select
-            name="faculty_id"
-            defaultValue={blockClass.facultyId ?? ''}
-            aria-label={`Instructor for ${subjectCode} block ${block.code}`}
-          >
-            <option value="" disabled>
-              Select instructor
-            </option>
-            {blockClass.candidates.map((candidate) => {
-              const current = candidate.id === blockClass.facultyId
-              const projected = current ? candidate.load : candidate.load + blockClass.hours
-              const over = candidate.maxLoad > 0 && projected > candidate.maxLoad
-              return (
-                <option key={candidate.id} value={candidate.id}>
-                  {candidate.name} ·{' '}
-                  {candidate.maxLoad > 0
-                    ? `${candidate.load}/${candidate.maxLoad} h`
-                    : `${candidate.load} h`}
-                  {over ? ' (over max load)' : ''}
-                </option>
-              )
-            })}
-          </select>
-        ) : (
-          <span className={styles.warn}>
-            No qualified instructor. Add one under Instructors → Qualified Subjects.
-          </span>
-        )}
-        {blockClass.candidates.length > 0 && (
-          <button type="submit" name="intent" value="assign" className="btn btn-primary btn-sm">
-            Save instructor
-          </button>
-        )}
-        {blockClass.facultyId && (
-          <button type="submit" name="intent" value="clear" className="btn btn-outline btn-sm">
-            Clear
-          </button>
-        )}
-      </div>
-    </form>
+      <ul className={styles.blockRows}>
+        {blocks.map((block) => {
+          const blockClass = bySection.get(block.id)
+          return (
+            <li key={block.id} className={styles.blockRow}>
+              <span className={styles.blockCode}>{block.code}</span>
+              {!blockClass ? (
+                <span className={styles.blockEmpty}>No class yet for Block {block.code}</span>
+              ) : !blockClass.candidates.length ? (
+                <span className={styles.warn}>
+                  No qualified instructor. Add one under Instructors → Qualified Subjects.
+                </span>
+              ) : (
+                <form action={assignAction} className={styles.blockAssign}>
+                  <input type="hidden" name="offering_id" value={blockClass.offeringId} />
+                  <input type="hidden" name="return_to" value="/admin/subjects" />
+                  <select
+                    name="faculty_id"
+                    defaultValue={blockClass.facultyId ?? ''}
+                    aria-label={`Instructor for ${subjectCode} block ${block.code}`}
+                  >
+                    <option value="" disabled>
+                      Select instructor
+                    </option>
+                    {blockClass.candidates.map((candidate) => {
+                      const current = candidate.id === blockClass.facultyId
+                      const projected = current ? candidate.load : candidate.load + blockClass.hours
+                      const over = candidate.maxLoad > 0 && projected > candidate.maxLoad
+                      return (
+                        <option key={candidate.id} value={candidate.id}>
+                          {candidate.name} ·{' '}
+                          {candidate.maxLoad > 0
+                            ? `${candidate.load}/${candidate.maxLoad} h`
+                            : `${candidate.load} h`}
+                          {over ? ' (over max load)' : ''}
+                        </option>
+                      )
+                    })}
+                  </select>
+                  <span
+                    className={
+                      !blockClass.facultyId
+                        ? styles.modeMissing
+                        : blockClass.mode === 'manual'
+                          ? styles.modeManual
+                          : styles.modeAuto
+                    }
+                  >
+                    {!blockClass.facultyId
+                      ? 'None'
+                      : blockClass.mode === 'manual'
+                        ? 'Manual'
+                        : 'Auto'}
+                  </span>
+                  <button
+                    type="submit"
+                    name="intent"
+                    value="assign"
+                    className="btn btn-primary btn-sm"
+                  >
+                    Save
+                  </button>
+                  {blockClass.facultyId && (
+                    <button
+                      type="submit"
+                      name="intent"
+                      value="clear"
+                      className="btn btn-outline btn-sm"
+                      title="Hand this class back to automatic assignment"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </form>
+              )}
+            </li>
+          )
+        })}
+      </ul>
+    </section>
   )
 }

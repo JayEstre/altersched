@@ -1,0 +1,39 @@
+.cell {
+  min-width: 108px;
+}
+
+.window {
+  display: inline-block;
+  margin: 2px 0;
+  padding: 2px 8px;
+  border: 1px solid #b9dfc9;
+  border-radius: 6px;
+  background: var(--success-soft);
+  color: #13573d;
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.preferred {
+  border-color: #c7d8ee;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.unavailable {
+  border-color: #f4c3be;
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.off {
+  color: var(--muted);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}

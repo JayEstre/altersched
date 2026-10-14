@@ -1,0 +1,88 @@
+.panel {
+  padding: 0;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 12px;
+  padding: 14px 20px;
+}
+
+.item + .item {
+  border-top: 1px solid var(--line);
+}
+
+.unread {
+  background: #f7faff;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--surface-3);
+  color: var(--muted);
+}
+
+.unread .icon {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.titleRow strong {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.copy p {
+  color: var(--text-soft);
+  font-size: 13.5px;
+}
+
+.copy time {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.dot {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 700;
+}

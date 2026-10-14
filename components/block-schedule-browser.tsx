@@ -1,13 +1,15 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { GlassModal } from './glass-modal'
-import { DAY_NAMES, ordinal } from '@/lib/format'
+import { ordinal } from '@/lib/format'
+import { WeeklyTimetable } from './weekly-timetable'
+import styles from './block-schedule-browser.module.css'
 
 type Entry = {
   id: string
   year: number
   block: string
+  /** "CODE — Subject name" */
   subject: string
   faculty: string
   room: string
@@ -15,101 +17,89 @@ type Entry = {
   start: string
   end: string
 }
+
+/** Pick a year and a block; its draft week is drawn right below. */
 export function BlockScheduleBrowser({ entries }: { entries: Entry[] }) {
-  const [year, setYear] = useState(1)
+  const years = [1, 2, 3, 4]
+  const firstYear = years.find((y) => entries.some((e) => e.year === y)) ?? 1
+  const [year, setYear] = useState(firstYear)
   const [block, setBlock] = useState('')
+
   const blocks = useMemo(
     () => Array.from(new Set(entries.filter((e) => e.year === year).map((e) => e.block))).sort(),
     [entries, year]
   )
   const chosen = blocks.includes(block) ? block : (blocks[0] ?? '')
-  const visible = entries
-    .filter((e) => e.year === year && e.block === chosen)
-    .sort((a, b) => a.day - b.day || a.start.localeCompare(b.start))
+  const visible = entries.filter((e) => e.year === year && e.block === chosen)
+
   return (
-    <section className="panel as-browser">
-      <header className="as-browser-header">
-        <span className="section-kicker">DRAFT TIMETABLE</span>
-        <h2>Schedules by Year & Block</h2>
-        <p className="muted">
-          View the real entries in the selected draft. Blocks without entries are not shown as
-          scheduled.
-        </p>
-      </header>
-      <div className="as-year-grid" role="group" aria-label="Year level">
-        {[1, 2, 3, 4].map((y) => (
-          <button
-            key={y}
-            type="button"
-            className={`as-year-card ${year === y ? 'as-selected' : ''}`}
-            onClick={() => {
-              setYear(y)
-              setBlock('')
-            }}
-          >
-            <strong>{ordinal(y)} Year</strong>
-            <small>
-              {new Set(entries.filter((e) => e.year === y).map((e) => e.block)).size} blocks with
-              entries
-            </small>
-          </button>
-        ))}
-      </div>
-      <div className="as-browser-controls">
-        <label>
-          Block{' '}
-          <select
-            value={chosen}
-            onChange={(e) => setBlock(e.target.value)}
-            disabled={!blocks.length}
-          >
-            {blocks.length ? (
-              blocks.map((b) => (
-                <option key={b} value={b}>
-                  {b}
-                </option>
-              ))
-            ) : (
-              <option value="">No blocks scheduled</option>
-            )}
-          </select>
-        </label>
-        {chosen && (
-          <GlassModal
-            key={`${year}-${chosen}`}
-            title={`${ordinal(year)} Year · ${chosen}`}
-            trigger={`View Block Schedule (${visible.length})`}
-            wide
-          >
-            <div className="as-table-wrap">
-              <table className="as-details-table">
-                <thead>
-                  <tr>
-                    <th>Subject</th>
-                    <th>Faculty</th>
-                    <th>Day</th>
-                    <th>Time</th>
-                    <th>Room</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {visible.map((e) => (
-                    <tr key={e.id}>
-                      <td>{e.subject}</td>
-                      <td>{e.faculty}</td>
-                      <td>{DAY_NAMES[e.day] ?? `Day ${e.day}`}</td>
-                      <td>
-                        {e.start}–{e.end}
-                      </td>
-                      <td>{e.room}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </GlassModal>
+    <div className={styles.browser}>
+      <div className={styles.controls}>
+        <div className="view-switch-tabs" role="tablist" aria-label="Year level">
+          {years.map((y) => {
+            const count = new Set(entries.filter((e) => e.year === y).map((e) => e.block)).size
+            return (
+              <button
+                key={y}
+                type="button"
+                role="tab"
+                aria-selected={year === y}
+                className={`view-switch-tab ${year === y ? 'active' : ''}`}
+                onClick={() => {
+                  setYear(y)
+                  setBlock('')
+                }}
+              >
+                {ordinal(y)} Year
+                <span className={styles.count}>{count}</span>
+              </button>
+            )
+          })}
+        </div>
+
+        {blocks.length > 0 && (
+          <div className={styles.blocks} role="group" aria-label="Block">
+            {blocks.map((b) => (
+              <button
+                key={b}
+                type="button"
+                aria-pressed={b === chosen}
+                className={b === chosen ? `${styles.block} ${styles.blockActive}` : styles.block}
+                onClick={() => setBlock(b)}
+              >
+                Block {b}
+              </button>
+            ))}
+          </div>
         )}
       </div>
-    </section>
+
+      {chosen ? (
+        <>
+          <p className={styles.caption}>
+            BSIT {year}
+            {chosen} · {visible.length} {visible.length === 1 ? 'class meeting' : 'class meetings'}
+          </p>
+          {/* Keyed so the week settles in again when another block is chosen. */}
+          <WeeklyTimetable
+            key={`${year}-${chosen}`}
+            hourHeight={50}
+            sessions={visible.map((e) => {
+              const [code, ...name] = e.subject.split(' — ')
+              return {
+                id: e.id,
+                day: e.day,
+                start: e.start,
+                end: e.end,
+                title: code || e.subject,
+                lines: [name.join(' — '), e.faculty, e.room].filter(Boolean),
+              }
+            })}
+          />
+        </>
+      ) : (
+        <p className={styles.empty}>No draft classes for {ordinal(year)} Year yet.</p>
+      )}
+    </div>
   )
 }

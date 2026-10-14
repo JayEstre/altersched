@@ -1,91 +1,69 @@
-<<<<<<< HEAD
+import Image from 'next/image'
+import Link from 'next/link'
 import type { ReactNode } from 'react'
-=======
-import type { ReactNode } from "react";
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
+import { BrandWeek } from './brand-week'
+import styles from './auth-shell.module.css'
 
+/** Sign-in, registration and account-status pages: brand panel on the left, the form on the right. */
 export function AuthPage({
   children,
-  polished = true,
-<<<<<<< HEAD
-  className = '',
 }: {
   children: ReactNode
   polished?: boolean
   className?: string
 }) {
   return (
-    <main
-      className={['auth-page', polished ? 'auth-page-polished' : '', className]
-        .filter(Boolean)
-        .join(' ')}
-    >
-=======
-  className = "",
-}: {
-  children: ReactNode;
-  polished?: boolean;
-  className?: string;
-}) {
-  return (
-    <main className={['auth-page', polished ? 'auth-page-polished' : '', className].filter(Boolean).join(' ')}>
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-      {polished && (
-        <>
-          <div className="auth-decor auth-decor-grid" aria-hidden="true" />
-          <div className="auth-decor auth-decor-orb auth-decor-orb-one" aria-hidden="true" />
-          <div className="auth-decor auth-decor-orb auth-decor-orb-two" aria-hidden="true" />
-        </>
-      )}
-      {children}
+    <main className={styles.page}>
+      <aside className={styles.brand}>
+        <Link href="/" className={styles.lockup}>
+          <Image src="/cctc-logo.png" alt="" width={44} height={44} priority />
+          <span>
+            <strong>Consolatrix College</strong>
+            <small>of Toledo City, Inc.</small>
+          </span>
+        </Link>
+        <div className={styles.pitch}>
+          <h2>Every class, room and instructor in one schedule.</h2>
+          <ul>
+            <li>Conflict-checked timetables for every BSIT block</li>
+            <li>Instructors see their week and request changes</li>
+            <li>Students open the published schedule by QR code</li>
+          </ul>
+        </div>
+        <BrandWeek />
+        <p className={styles.product}>
+          <Image src="/altsched-logo.png" alt="" width={22} height={22} />
+          AlterSched · class scheduling
+        </p>
+      </aside>
+      <section className={styles.main}>{children}</section>
     </main>
-<<<<<<< HEAD
   )
-=======
-  );
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
 }
 
 export function AuthCard({
   children,
   wide = false,
-  status = false,
-<<<<<<< HEAD
   className = '',
 }: {
   children: ReactNode
   wide?: boolean
   status?: boolean
   className?: string
-=======
-  className = "",
-}: {
-  children: ReactNode;
-  wide?: boolean;
-  status?: boolean;
-  className?: string;
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
 }) {
   return (
-    <section
-      className={[
-        'auth-card',
-        wide ? 'auth-card-wide' : '',
-        status ? 'auth-status-card' : '',
-        className,
-<<<<<<< HEAD
-      ]
-        .filter(Boolean)
-        .join(' ')}
-    >
+    <div className={[styles.card, wide ? styles.wide : '', className].filter(Boolean).join(' ')}>
       {children}
-    </section>
+    </div>
   )
-=======
-      ].filter(Boolean).join(' ')}
-    >
-      {children}
-    </section>
-  );
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
+}
+
+/** Heading block used at the top of each auth card. */
+export function AuthHeading({ title, children }: { title: string; children?: ReactNode }) {
+  return (
+    <header className={styles.heading}>
+      <h1>{title}</h1>
+      {children && <p>{children}</p>}
+    </header>
+  )
 }

@@ -1,798 +1,191 @@
 import Link from 'next/link'
-<<<<<<< HEAD
 import { requireRole } from '@/lib/auth/require-role'
 import { createClient } from '@/lib/supabase/server'
-import { PageHead, Stat, Badge } from '@/components/ui'
+import { PageHead, Stat, Notice } from '@/components/ui'
 import { one } from '@/lib/relations'
+import { loadPublishedEntries, schoolToday } from '@/lib/faculty-schedule'
+import { DAY_NAMES, formatDateTime, formatTime12, humanize } from '@/lib/format'
+import { timeToMinutes } from '@/lib/time'
 import styles from './page.module.css'
-
-export const revalidate = 60
 
 export default async function Page() {
   const { profile } = await requireRole(['faculty'])
-=======
+  const supabase = await createClient()
 
-import { requireRole } from '@/lib/auth/require-role'
-import { createClient } from '@/lib/supabase/server'
-import {
-  PageHead,
-  Stat,
-  Badge,
-} from '@/components/ui'
-
-function rel(value: any) {
-  return Array.isArray(value)
-    ? value[0]
-    : value
-}
-
-export const revalidate = 60;
-
-export default async function Page() {
-  const { profile } =
-    await requireRole(['faculty'])
-
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-  const s = await createClient()
-
-  /* =========================================================
-     FACULTY PROFILE
-     ========================================================= */
-
-<<<<<<< HEAD
-  const { data: facultyProfile, error: facultyError } = await s
+  const { data: facultyProfile, error: facultyError } = await supabase
     .from('faculty_profiles')
-    .select(
-      `
-=======
-  const {
-    data: facultyProfile,
-    error: facultyError,
-  } = await s
-    .from('faculty_profiles')
-    .select(`
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-      id,
-      employee_id,
-      employment_type,
-      max_teaching_load,
-      department_id,
-      departments(
-        code,
-        name
-      )
-<<<<<<< HEAD
-    `
-    )
-=======
-    `)
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
+    .select('id, employee_id, employment_type, max_teaching_load, departments(code, name)')
     .eq('profile_id', profile.id)
     .maybeSingle()
 
-  if (facultyError) {
-<<<<<<< HEAD
-    console.error('Failed to load faculty profile:', facultyError)
-  }
+  const [published, availabilityResult, requestResult, notificationResult, unreadResult] =
+    await Promise.all([
+      loadPublishedEntries(supabase, facultyProfile?.id),
+      facultyProfile?.id
+        ? supabase
+            .from('faculty_availability')
+            .select('id', { count: 'exact', head: true })
+            .eq('faculty_id', facultyProfile.id)
+        : Promise.resolve({ count: 0 }),
+      supabase
+        .from('schedule_change_requests')
+        .select('id', { count: 'exact', head: true })
+        .eq('requested_by', profile.id)
+        .eq('status', 'pending'),
+      supabase
+        .from('notifications')
+        .select('id, title, message, read_at, created_at')
+        .eq('profile_id', profile.id)
+        .order('created_at', { ascending: false })
+        .limit(3),
+      supabase
+        .from('notifications')
+        .select('id', { count: 'exact', head: true })
+        .eq('profile_id', profile.id)
+        .is('read_at', null),
+    ])
 
+  const entries = published.entries
   const department = one(facultyProfile?.departments)
-=======
-    console.error(
-      'Failed to load faculty profile:',
-      facultyError
-    )
-  }
-
-  const department =
-    rel(
-      (facultyProfile as any)
-        ?.departments
-    )
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-
-  /* =========================================================
-     DASHBOARD COUNTS
-     ========================================================= */
-
-<<<<<<< HEAD
-  const [offeringResult, availabilityResult, notificationResult] = await Promise.all([
-=======
-  const [
-    offeringResult,
-    availabilityResult,
-    notificationResult,
-  ] = await Promise.all([
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-    facultyProfile?.id
-      ? s
-          .from('class_offerings')
-          .select('id', {
-            count: 'exact',
-            head: true,
-          })
-<<<<<<< HEAD
-          .eq('faculty_id', facultyProfile.id)
-=======
-          .eq(
-            'faculty_id',
-            facultyProfile.id
-          )
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-          .eq('status', 'active')
-      : Promise.resolve({
-          count: 0,
-          error: null,
-        }),
-<<<<<<< HEAD
-=======
-
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-    facultyProfile?.id
-      ? s
-          .from('faculty_availability')
-          .select('id', {
-            count: 'exact',
-            head: true,
-          })
-<<<<<<< HEAD
-          .eq('faculty_id', facultyProfile.id)
-=======
-          .eq(
-            'faculty_id',
-            facultyProfile.id
-          )
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-      : Promise.resolve({
-          count: 0,
-          error: null,
-        }),
-<<<<<<< HEAD
-=======
-
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-    s
-      .from('notifications')
-      .select('id', {
-        count: 'exact',
-        head: true,
-      })
-<<<<<<< HEAD
-      .eq('profile_id', profile.id)
-      .is('read_at', null),
-  ])
-
-  if (offeringResult.error) {
-    console.error('Failed to count class offerings:', offeringResult.error)
-  }
-
-  if (availabilityResult.error) {
-    console.error('Failed to count faculty availability:', availabilityResult.error)
-  }
-
-  if (notificationResult.error) {
-    console.error('Failed to count notifications:', notificationResult.error)
-  }
-
-  const classOfferings = offeringResult.count ?? 0
-  const availabilityRecords = availabilityResult.count ?? 0
-  const unreadNotifications = notificationResult.count ?? 0
-
-  const profileReady = Boolean(
-    facultyProfile?.id && facultyProfile?.employee_id && facultyProfile?.department_id
+  const today = schoolToday()
+  const todays = entries.filter((entry) => entry.day_of_week === today)
+  const weeklyMinutes = entries.reduce(
+    (total, entry) => total + (timeToMinutes(entry.end_time) - timeToMinutes(entry.start_time)),
+    0
   )
-=======
-      .eq(
-        'profile_id',
-        profile.id
-      )
-      .is(
-        'read_at',
-        null
-      ),
-  ])
-
-  if (offeringResult.error) {
-    console.error(
-      'Failed to count class offerings:',
-      offeringResult.error
-    )
-  }
-
-  if (availabilityResult.error) {
-    console.error(
-      'Failed to count faculty availability:',
-      availabilityResult.error
-    )
-  }
-
-  if (notificationResult.error) {
-    console.error(
-      'Failed to count notifications:',
-      notificationResult.error
-    )
-  }
-
-  const classOfferings =
-    offeringResult.count ?? 0
-
-  const availabilityRecords =
-    availabilityResult.count ?? 0
-
-  const unreadNotifications =
-    notificationResult.count ?? 0
-
-  const profileReady =
-    Boolean(
-      facultyProfile?.id &&
-        facultyProfile?.employee_id &&
-        facultyProfile?.department_id
-    )
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-
-  /* =========================================================
-     PAGE
-     ========================================================= */
+  const weeklyHours = Math.round((weeklyMinutes / 60) * 10) / 10
+  const maxLoad = Number(facultyProfile?.max_teaching_load ?? 0)
+  const availabilityCount = availabilityResult.count ?? 0
+  const pendingRequests = requestResult.count ?? 0
+  const notices = notificationResult.data ?? []
+  const firstName = (profile.full_name || '').trim().split(/\s+/)[0]
 
   return (
-<<<<<<< HEAD
-    <div className={styles.scope}>
-=======
     <>
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
       <PageHead
-        eyebrow="FACULTY PORTAL"
-        title="Faculty Dashboard"
-        description="View your teaching assignments, class schedule, availability, notifications, and schedule-change workflow."
+        title={firstName ? `Good day, ${firstName}` : 'Dashboard'}
+        description={`${DAY_NAMES[today] ?? 'Today'} · ${department?.name ?? 'Instructor'}${
+          facultyProfile?.employee_id ? ` · ${facultyProfile.employee_id}` : ''
+        }`}
+        actions={
+          <Link href="/faculty/schedule" className="btn btn-primary">
+            Open my schedule
+          </Link>
+        }
       />
-<<<<<<< HEAD
-      {/* =====================================================
-          STATS
-          ===================================================== */}
-      <div className="stats-grid">
-        <Stat label="Class Offerings" value={classOfferings} />
-        <Stat label="Availability Records" value={availabilityRecords} />
-        <Stat label="Unread Notifications" value={unreadNotifications} />
-        <Stat label="Max Teaching Load" value={facultyProfile?.max_teaching_load ?? '—'} />
-      </div>
-      {/* =====================================================
-          FACULTY PROFILE
-          ===================================================== */}
-      <section className="panel block-gap-y">
-        <div className="split-head">
-          <div>
-            <span className="sched-kicker">FACULTY PROFILE</span>
-            <h3 className="tight-text">{profile.full_name || 'Faculty'}</h3>
-            <p className="muted flush">
-              Employee ID: <strong>{facultyProfile?.employee_id || '—'}</strong>
-            </p>
-          </div>
-          <Badge tone={profileReady ? 'success' : 'warning'}>
-            {profileReady ? 'Profile Ready' : 'Incomplete Profile'}
-          </Badge>
-        </div>
-        <div className="faculty-info-grid">
-          <div className="faculty-info-card">
-            <span>Department</span>
-            <strong>{department?.code || '—'}</strong>
-          </div>
-          <div className="faculty-info-card">
-            <span>Employment</span>
-            <strong>{facultyProfile?.employment_type || '—'}</strong>
-          </div>
-          <div className="faculty-info-card">
-            <span>Maximum Load</span>
-            <strong>{facultyProfile?.max_teaching_load ?? '—'}</strong>
-          </div>
-        </div>
-      </section>
-      {/* =====================================================
-          INCOMPLETE PROFILE
-          ===================================================== */}
-      {!profileReady && (
-        <div className="portal-alert portal-alert-danger">
-          <strong>Faculty profile incomplete.</strong>
-          <span>
-            Your faculty information must be completed before AlterSched can fully manage your
-=======
 
-      {/* =====================================================
-          STATS
-          ===================================================== */}
-
-      <div className="stats-grid">
-        <Stat
-          label="Class Offerings"
-          value={classOfferings}
-        />
-
-        <Stat
-          label="Availability Records"
-          value={availabilityRecords}
-        />
-
-        <Stat
-          label="Unread Notifications"
-          value={unreadNotifications}
-        />
-
-        <Stat
-          label="Max Teaching Load"
-          value={
-            facultyProfile
-              ?.max_teaching_load ??
-            '—'
-          }
-        />
-      </div>
-
-      {/* =====================================================
-          FACULTY PROFILE
-          ===================================================== */}
-
-      <section
-        className="panel"
-        style={{
-          marginTop: 16,
-          marginBottom: 16,
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent:
-              'space-between',
-            alignItems:
-              'flex-start',
-            gap: 16,
-            flexWrap: 'wrap',
-          }}
-        >
-          <div>
-            <span className="sched-kicker">
-              FACULTY PROFILE
-            </span>
-
-            <h3
-              style={{
-                marginTop: 6,
-                marginBottom: 5,
-              }}
-            >
-              {profile.full_name ||
-                'Faculty'}
-            </h3>
-
-            <p
-              className="muted"
-              style={{
-                margin: 0,
-              }}
-            >
-              Employee ID:{' '}
-              <strong>
-                {facultyProfile
-                  ?.employee_id ||
-                  '—'}
-              </strong>
-            </p>
-          </div>
-
-          <Badge
-            tone={
-              profileReady
-                ? 'success'
-                : 'warning'
-            }
-          >
-            {profileReady
-              ? 'Profile Ready'
-              : 'Incomplete Profile'}
-          </Badge>
-        </div>
-
-        <div className="faculty-info-grid">
-          <div className="faculty-info-card">
-            <span>
-              Department
-            </span>
-
-            <strong>
-              {department?.code ||
-                '—'}
-            </strong>
-          </div>
-
-          <div className="faculty-info-card">
-            <span>
-              Employment
-            </span>
-
-            <strong>
-              {facultyProfile
-                ?.employment_type ||
-                '—'}
-            </strong>
-          </div>
-
-          <div className="faculty-info-card">
-            <span>
-              Maximum Load
-            </span>
-
-            <strong>
-              {facultyProfile
-                ?.max_teaching_load ??
-                '—'}
-            </strong>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================
-          INCOMPLETE PROFILE
-          ===================================================== */}
-
-      {!profileReady && (
-        <div className="portal-alert portal-alert-danger">
-          <strong>
-            Faculty profile incomplete.
-          </strong>
-
-          <span>
-            Your faculty information must be completed
-            before AlterSched can fully manage your
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-            teaching assignments and availability.
-          </span>
-        </div>
+      {facultyError && (
+        <Notice tone="danger" title="Your instructor profile could not be loaded.">
+          Try again in a moment.
+        </Notice>
       )}
-<<<<<<< HEAD
-      {/* =====================================================
-          MY TEACHING SCHEDULE
-          ===================================================== */}
-      <section className="panel block-gap">
-        <div className="faculty-section-head">
-          <div>
-            <span className="sched-kicker">TEACHING</span>
-            <h3>My Teaching Schedule</h3>
-            <p className="muted">
-              View your assigned published classes, rooms, days, and teaching times.
-            </p>
+      {!facultyError && !facultyProfile && (
+        <Notice tone="warning" title="Your instructor record is not set up yet.">
+          The Administrator still needs to finish your record before classes can be assigned to you.
+        </Notice>
+      )}
+      {facultyProfile && availabilityCount === 0 && (
+        <Notice tone="warning" title="Add your availability.">
+          The schedule generator only places your classes inside the times you are available.{' '}
+          <Link href="/faculty/availability">Set your availability</Link>.
+        </Notice>
+      )}
+
+      <div className="stats-grid">
+        <Stat label="Classes this week" value={entries.length} />
+        <Stat
+          label="Teaching hours"
+          value={maxLoad > 0 ? `${weeklyHours} / ${maxLoad} h` : `${weeklyHours} h`}
+          hint={maxLoad > 0 ? 'Published hours against your maximum load' : undefined}
+        />
+        <Stat label="Pending requests" value={pendingRequests} />
+        <Stat label="Unread notices" value={unreadResult.count ?? 0} />
+      </div>
+
+      <div className={styles.columns}>
+        <section className="panel">
+          <div className={styles.panelHead}>
+            <h3>Today&apos;s classes</h3>
+            <Link href="/faculty/schedule">Full week</Link>
           </div>
-          <Badge tone={classOfferings > 0 ? 'success' : 'warning'}>
-            {classOfferings} Offering
-            {classOfferings === 1 ? '' : 's'}
-          </Badge>
-        </div>
-        <div className="faculty-actions">
-          <Link href="/faculty/schedule" className="user-btn user-btn-primary">
-=======
-
-      {/* =====================================================
-          MY TEACHING SCHEDULE
-          ===================================================== */}
-
-      <section
-        className="panel"
-        style={{
-          marginBottom: 16,
-        }}
-      >
-        <div className="faculty-section-head">
-          <div>
-            <span className="sched-kicker">
-              TEACHING
-            </span>
-
-            <h3>
-              My Teaching Schedule
-            </h3>
-
-            <p className="muted">
-              View your assigned published classes,
-              rooms, days, and teaching times.
+          {todays.length ? (
+            <ol className={styles.today}>
+              {todays.map((entry) => {
+                const offering = one(entry.class_offerings)
+                const subject = one(offering?.subjects)
+                const section = one(offering?.sections)
+                const room = one(entry.rooms)
+                return (
+                  <li key={entry.id}>
+                    <span className={styles.time}>
+                      {formatTime12(entry.start_time)}
+                      <small>{formatTime12(entry.end_time)}</small>
+                    </span>
+                    <span className={styles.classInfo}>
+                      <strong>
+                        {subject?.code ?? 'Class'}
+                        {subject?.name && <span> · {subject.name}</span>}
+                      </strong>
+                      <small>
+                        Block {section?.code ?? '—'} · {room?.code ?? 'No room'} ·{' '}
+                        {humanize(entry.session_type || 'lecture')}
+                      </small>
+                    </span>
+                  </li>
+                )
+              })}
+            </ol>
+          ) : (
+            <p className={styles.quiet}>
+              {entries.length
+                ? 'No classes today.'
+                : 'No published classes yet. They appear here once the schedule is published.'}
             </p>
+          )}
+        </section>
+
+        <section className="panel">
+          <div className={styles.panelHead}>
+            <h3>Latest notices</h3>
+            <Link href="/faculty/notifications">All notices</Link>
           </div>
+          {notices.length ? (
+            <ul className={styles.notices}>
+              {notices.map((notice) => (
+                <li key={notice.id} className={notice.read_at ? undefined : styles.unread}>
+                  <strong>{notice.title}</strong>
+                  <span>{notice.message}</span>
+                  <time dateTime={notice.created_at}>{formatDateTime(notice.created_at)}</time>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className={styles.quiet}>Nothing new.</p>
+          )}
+        </section>
+      </div>
 
-          <Badge
-            tone={
-              classOfferings > 0
-                ? 'success'
-                : 'warning'
-            }
-          >
-            {classOfferings}{' '}
-            Offering
-            {classOfferings === 1
-              ? ''
-              : 's'}
-          </Badge>
+      <section className={`panel ${styles.profile}`}>
+        <div>
+          <span>Department</span>
+          <strong>{department?.code ?? '—'}</strong>
         </div>
-
-        <div className="faculty-actions">
-          <Link
-            href="/faculty/schedule"
-            className="user-btn user-btn-primary"
-          >
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-            View My Schedule
-          </Link>
+        <div>
+          <span>Employment</span>
+          <strong>{humanize(facultyProfile?.employment_type, 'Not specified')}</strong>
+        </div>
+        <div>
+          <span>Maximum load</span>
+          <strong>{maxLoad > 0 ? `${maxLoad} h / week` : 'Not set'}</strong>
+        </div>
+        <div>
+          <span>Availability</span>
+          <strong>
+            {availabilityCount ? `${availabilityCount} time windows` : 'Not set'}{' '}
+            <Link href="/faculty/availability">Edit</Link>
+          </strong>
         </div>
       </section>
-<<<<<<< HEAD
-      {/* =====================================================
-          AVAILABILITY
-          ===================================================== */}
-      <section className="panel block-gap">
-        <div className="faculty-section-head">
-          <div>
-            <span className="sched-kicker">AVAILABILITY</span>
-            <h3>Teaching Availability</h3>
-            <p className="muted">
-              Review the days and times used by AlterSched when assigning your classes.
-            </p>
-          </div>
-          <Badge tone={availabilityRecords > 0 ? 'success' : 'warning'}>
-            {availabilityRecords} Record
-            {availabilityRecords === 1 ? '' : 's'}
-          </Badge>
-        </div>
-        <div className="faculty-actions">
-          <Link href="/faculty/availability" className="user-btn">
-=======
-
-      {/* =====================================================
-          AVAILABILITY
-          ===================================================== */}
-
-      <section
-        className="panel"
-        style={{
-          marginBottom: 16,
-        }}
-      >
-        <div className="faculty-section-head">
-          <div>
-            <span className="sched-kicker">
-              AVAILABILITY
-            </span>
-
-            <h3>
-              Teaching Availability
-            </h3>
-
-            <p className="muted">
-              Review the days and times used by
-              AlterSched when assigning your classes.
-            </p>
-          </div>
-
-          <Badge
-            tone={
-              availabilityRecords > 0
-                ? 'success'
-                : 'warning'
-            }
-          >
-            {availabilityRecords}{' '}
-            Record
-            {availabilityRecords === 1
-              ? ''
-              : 's'}
-          </Badge>
-        </div>
-
-        <div className="faculty-actions">
-          <Link
-            href="/faculty/availability"
-            className="user-btn"
-          >
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-            Manage Availability
-          </Link>
-        </div>
-      </section>
-<<<<<<< HEAD
-      {/* =====================================================
-          CHANGE REQUEST
-          ===================================================== */}
-      <section className="panel block-gap">
-        <div className="faculty-section-head">
-          <div>
-            <span className="sched-kicker">ALTERATIONS</span>
-            <h3>Schedule Change Request</h3>
-            <p className="muted">
-              Request a controlled change when an assigned class schedule needs adjustment.
-            </p>
-          </div>
-        </div>
-        <div className="faculty-actions">
-          <Link href="/faculty/alterations" className="user-btn">
-=======
-
-      {/* =====================================================
-          CHANGE REQUEST
-          ===================================================== */}
-
-      <section
-        className="panel"
-        style={{
-          marginBottom: 16,
-        }}
-      >
-        <div className="faculty-section-head">
-          <div>
-            <span className="sched-kicker">
-              ALTERATIONS
-            </span>
-
-            <h3>
-              Schedule Change Request
-            </h3>
-
-            <p className="muted">
-              Request a controlled change when an
-              assigned class schedule needs adjustment.
-            </p>
-          </div>
-        </div>
-
-        <div className="faculty-actions">
-          <Link
-            href="/faculty/alterations"
-            className="user-btn"
-          >
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-            View Change Requests
-          </Link>
-        </div>
-      </section>
-<<<<<<< HEAD
-      {/* =====================================================
-          NOTIFICATIONS
-          ===================================================== */}
-      <section className="panel">
-        <div className="faculty-section-head">
-          <div>
-            <span className="sched-kicker">NOTIFICATIONS</span>
-            <h3>Schedule Updates</h3>
-            <p className="muted">
-              Check published schedule changes, alteration updates, and other notices.
-            </p>
-          </div>
-          <Badge tone={unreadNotifications > 0 ? 'warning' : 'success'}>
-            {unreadNotifications > 0 ? `${unreadNotifications} Unread` : 'Up to Date'}
-          </Badge>
-        </div>
-        <div className="faculty-actions">
-          <Link href="/faculty/notifications" className="user-btn">
-=======
-
-      {/* =====================================================
-          NOTIFICATIONS
-          ===================================================== */}
-
-      <section className="panel">
-        <div className="faculty-section-head">
-          <div>
-            <span className="sched-kicker">
-              NOTIFICATIONS
-            </span>
-
-            <h3>
-              Schedule Updates
-            </h3>
-
-            <p className="muted">
-              Check published schedule changes,
-              alteration updates, and other notices.
-            </p>
-          </div>
-
-          <Badge
-            tone={
-              unreadNotifications > 0
-                ? 'warning'
-                : 'success'
-            }
-          >
-            {unreadNotifications > 0
-              ? `${unreadNotifications} Unread`
-              : 'Up to Date'}
-          </Badge>
-        </div>
-
-        <div className="faculty-actions">
-          <Link
-            href="/faculty/notifications"
-            className="user-btn"
-          >
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-            View Notifications
-          </Link>
-        </div>
-      </section>
-<<<<<<< HEAD
-    </div>
-  )
-}
-=======
-
-      {/* =====================================================
-          LOCAL STYLES
-          ===================================================== */}
-
-      <style>{`
-        .faculty-info-grid {
-          display: grid;
-          grid-template-columns:
-            repeat(
-              auto-fit,
-              minmax(160px, 1fr)
-            );
-          gap: 10px;
-          margin-top: 16px;
-        }
-
-        .faculty-info-card {
-          border: 1px solid var(--line);
-          border-radius: 12px;
-          padding: 11px 13px;
-          min-width: 0;
-        }
-
-        .faculty-info-card span {
-          display: block;
-          margin-bottom: 4px;
-          color: var(--muted);
-          font-size: 10px;
-          text-transform: uppercase;
-          letter-spacing: 0.07em;
-        }
-
-        .faculty-info-card strong {
-          display: block;
-          font-size: 14px;
-          word-break: break-word;
-        }
-
-        .faculty-section-head {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          gap: 14px;
-          flex-wrap: wrap;
-        }
-
-        .faculty-section-head h3 {
-          margin-top: 5px;
-          margin-bottom: 4px;
-        }
-
-        .faculty-section-head p {
-          margin: 0;
-          max-width: 680px;
-        }
-
-        .faculty-actions {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-          margin-top: 15px;
-        }
-
-        @media (max-width: 640px) {
-          .faculty-info-card {
-            padding: 10px 12px;
-          }
-
-          .faculty-actions .user-btn {
-            width: 100%;
-            justify-content: center;
-          }
-        }
-      `}</style>
     </>
   )
 }
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf

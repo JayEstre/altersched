@@ -38,7 +38,7 @@
 
 .dayHead span {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 11.5px;
 }
 
 .times {
@@ -50,7 +50,7 @@
   right: 8px;
   transform: translateY(-50%);
   color: var(--muted);
-  font-size: 10.5px;
+  font-size: 11.5px;
   font-weight: 600;
   white-space: nowrap;
 }
@@ -75,7 +75,7 @@
   border: 1px solid;
   border-left-width: 4px;
   border-radius: 8px;
-  font-size: 11px;
+  font-size: 11.5px;
   line-height: 1.3;
 }
 
@@ -98,32 +98,108 @@
   font-weight: 600;
 }
 
-.lecture {
-  border-color: #bfdbfe;
-  border-left-color: #2563eb;
-  background: #eff6ff;
-  color: #1e3a8a;
+.kind {
+  margin-left: 6px;
+  padding: 0 5px;
+  border: 1px solid var(--line-c);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.8);
+  color: inherit;
+  font-size: 10.5px;
+  font-style: normal;
+  font-weight: 700;
 }
 
-.lab {
-  border-color: #ddd6fe;
-  border-left-color: #7c3aed;
-  background: #f5f3ff;
-  color: #4c1d95;
+/*
+ * One colour per subject (crest-friendly; red is kept for clashes).
+ * --ink is the title colour, --bar the left edge.
+ */
+.tone0 {
+  --bg: #eaf0f8;
+  --line-c: #c9d7ec;
+  --bar: #1d4f91;
+  --ink: #12305f;
+}
+.tone1 {
+  --bg: #fbf4df;
+  --line-c: #ecdcaa;
+  --bar: #b8901f;
+  --ink: #5a4510;
+}
+.tone2 {
+  --bg: #e4f3f1;
+  --line-c: #bfe0db;
+  --bar: #15786c;
+  --ink: #0c4841;
+}
+.tone3 {
+  --bg: #f3ebf8;
+  --line-c: #dccbe9;
+  --bar: #7b3f9e;
+  --ink: #4a2360;
+}
+.tone4 {
+  --bg: #eaf4e6;
+  --line-c: #cde3c5;
+  --bar: #3f7d32;
+  --ink: #23481b;
+}
+.tone5 {
+  --bg: #fbefe5;
+  --line-c: #efd2bc;
+  --bar: #b4602a;
+  --ink: #683314;
+}
+.tone6 {
+  --bg: #e5f2fa;
+  --line-c: #c3dff0;
+  --bar: #2878ad;
+  --ink: #154766;
+}
+.tone7 {
+  --bg: #eef0f4;
+  --line-c: #d3d8e1;
+  --bar: #56617a;
+  --ink: #2b3446;
 }
 
-.other {
-  border-color: var(--line-strong);
-  border-left-color: var(--muted);
-  background: #f8fafc;
-  color: var(--text);
+.session {
+  border-color: var(--line-c);
+  border-left-color: var(--bar);
+  background: var(--bg);
+  color: var(--ink);
+  transition:
+    box-shadow var(--dur, 200ms) ease,
+    border-color var(--dur, 200ms) ease;
+  /* The week settles into place in reading order: Monday morning first. */
+  animation: settle 440ms var(--ease-out, ease-out) both;
+  animation-delay: calc(var(--i, 0) * 28ms);
 }
 
-.alert {
-  border-color: #fecaca;
-  border-left-color: #dc2626;
-  background: #fef2f2;
-  color: #7f1d1d;
+.session:hover {
+  z-index: 3;
+  border-color: var(--bar);
+  box-shadow: 0 6px 16px -8px rgba(12, 35, 71, 0.45);
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.97);
+  }
+}
+
+.session.alert {
+  --bg: #fef2f2;
+  --line-c: #fecaca;
+  --bar: #dc2626;
+  --ink: #7f1d1d;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .session {
+    animation: none;
+  }
 }
 
 .empty {

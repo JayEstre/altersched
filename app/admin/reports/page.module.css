@@ -1,0 +1,34 @@
+.barHead {
+  width: 34%;
+}
+
+.bar {
+  position: relative;
+  display: block;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--surface-3);
+}
+
+.barFill,
+.barOver {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: var(--accent);
+}
+
+.barOver {
+  background: var(--danger);
+}
+
+/* The maximum load sits at 80% of the bar so overloads are visible past it. */
+.barMax {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: 80%;
+  width: 2px;
+  background: var(--navy);
+}

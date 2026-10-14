@@ -1,11 +1,13 @@
+import Image from 'next/image'
 import QRCode from 'qrcode'
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { DataTable } from '@/components/data-table'
-<<<<<<< HEAD
 import { ViewSwitch } from '@/components/view-switch'
 import { WeeklyTimetable, sessionKind } from '@/components/weekly-timetable'
 import { DAY_NAMES, formatTime12 } from '@/lib/format'
+import { PrintButton } from '@/components/print-button'
+import styles from './page.module.css'
 
 /** Shape returned by the get_public_schedule_by_token() database function. */
 type PublicEntry = {
@@ -66,7 +68,7 @@ export default async function PublicSchedulePage({
             <td>{entry.subject}</td>
             <td>{entry.room || '—'}</td>
             <td>{entry.instructor || 'TBA'}</td>
-            <td>{entry.session_type || 'lecture'}</td>
+            <td>{entry.session_type === 'lab' ? 'Lab' : 'Lecture'}</td>
           </tr>
         ))}
       </tbody>
@@ -74,15 +76,35 @@ export default async function PublicSchedulePage({
   )
 
   return (
-    <main className="public-schedule-page">
-      <section className="panel public-schedule-card">
-        <p className="eyebrow">ALTERSCHED • PUBLISHED SCHEDULE</p>
-        <h1>
-          {schedule.title || `${schedule.program || 'BSIT'} ${schedule.block || ''} Schedule`}
-        </h1>
-        <p className="muted">
-          {schedule.academic_year || ''} • {schedule.semester || ''} • Block {schedule.block || '—'}
-        </p>
+    <main className={styles.page}>
+      <header className={styles.top}>
+        <span className={styles.school}>
+          <Image src="/cctc-logo.png" alt="" width={40} height={40} />
+          <span>
+            <strong>Consolatrix College of Toledo City</strong>
+            <small>Published class schedule</small>
+          </span>
+        </span>
+        <PrintButton />
+      </header>
+      <section className={styles.sheet}>
+        <div className={styles.head}>
+          <div>
+            <h1>
+              {schedule.title || `${schedule.program || 'BSIT'} ${schedule.block || ''} Schedule`}
+            </h1>
+            <p>
+              {[
+                schedule.academic_year,
+                schedule.semester,
+                schedule.block && `Block ${schedule.block}`,
+              ]
+                .filter(Boolean)
+                .join(' · ')}
+            </p>
+          </div>
+          <span className="pill pill-success">Official</span>
+        </div>
         <ViewSwitch
           storageKey="public-schedule"
           week={
@@ -100,21 +122,17 @@ export default async function PublicSchedulePage({
           }
           list={table}
         />
-        <div className="qr-share">
+        <div className={styles.share}>
           {/* eslint-disable-next-line @next/next/no-img-element -- generated data: URL, nothing to optimise */}
-          <img src={qr} alt="Schedule QR code" width="220" height="220" />
-          <p className="muted">Scan this QR code to reopen this published schedule.</p>
+          <img src={qr} alt="QR code for this schedule" width="140" height="140" />
+          <p>
+            Scan to open this schedule on your phone. It always shows the latest published version.
+          </p>
         </div>
       </section>
+      <footer className={styles.footer}>
+        AlterSched · Consolatrix College of Toledo City, Inc.
+      </footer>
     </main>
   )
-=======
-
-const days=['','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
-export default async function PublicSchedule({params}:{params:Promise<{token:string}>}){
-  const {token}=await params; const s=await createClient(); const {data}=await s.rpc('get_public_schedule_by_token',{p_token:token})
-  if(!data) notFound(); const d:any=data
-  const base=process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'; const qr=await QRCode.toDataURL(`${base}/public/schedule/${token}`,{margin:1,width:220})
-  return <main className="public-schedule-page"><section className="panel public-schedule-card"><p className="eyebrow">ALTERSCHED • PUBLISHED SCHEDULE</p><h1>{d.title||`${d.program||'BSIT'} ${d.block||''} Schedule`}</h1><p className="muted">{d.academic_year||''} • {d.semester||''} • Block {d.block||'—'}</p><DataTable><thead><tr><th>Day</th><th>Time</th><th>Code</th><th>Subject</th><th>Room</th><th>Instructor</th><th>Session</th></tr></thead><tbody>{(d.entries||[]).map((e:any,i:number)=><tr key={i}><td>{days[e.day_of_week]||e.day_of_week}</td><td>{String(e.start_time).slice(0,5)}–{String(e.end_time).slice(0,5)}</td><td>{e.subject_code}</td><td>{e.subject}</td><td>{e.room||'—'}</td><td>{e.instructor||'TBA'}</td><td>{e.session_type||'lecture'}</td></tr>)}</tbody></DataTable><div className="qr-share"><img src={qr} alt="Schedule QR code" width="220" height="220"/><p className="muted">Scan this QR code to reopen this published schedule.</p></div></section></main>
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
 }

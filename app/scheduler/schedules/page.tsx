@@ -1,20 +1,12 @@
 import Link from 'next/link'
-<<<<<<< HEAD
-=======
-
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
 import { requireRole } from '@/lib/auth/require-role'
 import { createClient } from '@/lib/supabase/server'
-import { PageHead, Stat, Empty, Badge } from '@/components/ui'
+import { PageHead, Stat, Empty, Badge, Notice } from '@/components/ui'
 import { DataTable } from '@/components/data-table'
-<<<<<<< HEAD
 import { submitScheduleForAdminReview } from './actions'
 import { one } from '@/lib/relations'
+import { isRevisionNote } from '@/lib/format'
 import styles from './page.module.css'
-=======
-
-import { submitScheduleForAdminReview } from './actions'
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
 
 type SP = Promise<{
   success?: string
@@ -24,7 +16,6 @@ type SP = Promise<{
   schedule?: string
 }>
 
-<<<<<<< HEAD
 function errorMessage(error?: string, details?: string, count?: string) {
   if (!error) return ''
 
@@ -61,111 +52,20 @@ export default async function Page({ searchParams }: { searchParams?: SP }) {
   await requireRole(['department_scheduler'])
   const p = searchParams ? await searchParams : {}
   const s = await createClient()
-=======
-function rel(value: any) {
-  return Array.isArray(value)
-    ? value[0] ?? null
-    : value ?? null
-}
-
-function errorMessage(
-  error?: string,
-  details?: string,
-  count?: string
-) {
-  if (!error) return ''
-
-  const messages: Record<string, string> = {
-    schedule_required:
-      'Select a schedule first.',
-
-    schedule_not_found:
-      'The selected schedule could not be found or you are not authorized to manage it.',
-
-    no_current_version:
-      'This schedule does not have a valid current version yet.',
-
-    schedule_read_only:
-      'Published or archived schedules are read-only. Revisions must use the controlled alteration workflow.',
-
-    already_submitted:
-      'This schedule has already been submitted and is awaiting Super Admin review.',
-
-    invalid_schedule_status:
-      'This schedule is not currently in a state that can be submitted for review.',
-
-    invalid_version_status:
-      'Only a draft schedule version can be submitted for Super Admin review.',
-
-    empty_schedule:
-      'The schedule has no timetable entries. Complete the draft before submitting it for review.',
-
-    entry_lookup_failed:
-      'AlterSched could not verify the timetable entries.',
-
-    validation_lookup_failed:
-      'AlterSched could not verify the schedule validation results.',
-
-    unresolved_conflicts: `Resolve the blocking conflict${
-      Number(count || 0) === 1 ? '' : 's'
-    } before submitting this schedule for Admin review.`,
-
-    version_submit_failed:
-      'AlterSched could not submit the current schedule version for review.',
-
-    schedule_submit_failed:
-      'AlterSched could not update the schedule review status.',
-  }
-
-  const base =
-    messages[error] ||
-    'Unable to process the schedule.'
-
-  return details
-    ? `${base} ${details}`
-    : base
-}
-
-export default async function Page({
-  searchParams,
-}: {
-  searchParams?: SP
-}) {
-  await requireRole([
-    'department_scheduler',
-  ])
-
-  const p = searchParams
-    ? await searchParams
-    : {}
-
-  const s =
-    await createClient()
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
 
   /* =========================================================
      LOAD SCHEDULES
      ========================================================= */
 
-<<<<<<< HEAD
   const { data, error: loadError } = await s
     .from('schedules')
     .select(
       `
-=======
-  const {
-    data,
-    error: loadError,
-  } = await s
-    .from('schedules')
-    .select(`
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
       id,
       title,
       status,
       updated_at,
       current_version_id,
-<<<<<<< HEAD
       sections(
         code
       ),
@@ -176,22 +76,6 @@ export default async function Page({
         name
       ),
       schedule_versions!schedule_versions_schedule_id_fkey(
-=======
-
-      sections(
-        code
-      ),
-
-      programs(
-        code
-      ),
-
-      semesters(
-        name
-      ),
-
-      schedule_versions(
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
         id,
         version_number,
         status,
@@ -199,7 +83,6 @@ export default async function Page({
         created_at,
         published_at
       )
-<<<<<<< HEAD
     `
     )
     .order('updated_at', {
@@ -221,35 +104,6 @@ export default async function Page({
 
   const unresolvedLogs = validationResult.data ?? []
   const unresolvedByVersion = new Map<string, typeof unresolvedLogs>()
-=======
-    `)
-    .order(
-      'updated_at',
-      {
-        ascending: false,
-      }
-    )
-
-  const schedules: any[] =
-    data || []
-
-  const versionIds =
-    schedules
-      .map((item) => item.current_version_id)
-      .filter(Boolean)
-
-  const validationResult =
-    versionIds.length
-      ? await s
-          .from('schedule_validation_logs')
-          .select('id, schedule_version_id, severity, resolved, message')
-          .in('schedule_version_id', versionIds)
-          .eq('resolved', false)
-      : { data: [] as any[] }
-
-  const unresolvedLogs = validationResult.data ?? []
-  const unresolvedByVersion = new Map<string, any[]>()
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
 
   for (const log of unresolvedLogs) {
     const list = unresolvedByVersion.get(log.schedule_version_id) ?? []
@@ -261,7 +115,6 @@ export default async function Page({
      STATS
      ========================================================= */
 
-<<<<<<< HEAD
   const draftCount = schedules.filter((item) => item.status === 'draft').length
   const submittedCount = schedules.filter((item) => item.status === 'submitted').length
   const publishedCount = schedules.filter((item) => item.status === 'published').length
@@ -274,998 +127,165 @@ export default async function Page({
     const versions = item.schedule_versions || []
     const currentVersion = versions.find((version) => version.id === item.current_version_id)
 
-    return Boolean(currentVersion?.change_reason)
+    return isRevisionNote(currentVersion?.change_reason)
   }).length
 
   const blockingIssues = unresolvedLogs.length
   const message = errorMessage(p.error, p.details, p.count)
 
   return (
-    <div className={styles.scope}>
-      {/* =====================================================
-          PAGE HEADER
-      ====================================================== */}
-      <PageHead
-        eyebrow="REVIEW • VALIDATE • SUBMIT"
-        title="Schedules"
-        description="Review generated and revised department schedules before submitting them for Super Admin review. Final publication and public Code/QR distribution remain under the Super Admin."
-      />
-      {/* =====================================================
-          STATS
-      ====================================================== */}
-      <div className="stats-grid">
-        <Stat label="Schedule Records" value={schedules.length} />
-        <Stat label="Drafts" value={draftCount} />
-        <Stat label="Revised Drafts" value={revisedDraftCount} />
-=======
-  const draftCount =
-    schedules.filter(
-      (item) =>
-        item.status === 'draft'
-    ).length
-
-  const submittedCount =
-    schedules.filter(
-      (item) =>
-        item.status === 'submitted'
-    ).length
-
-  const publishedCount =
-    schedules.filter(
-      (item) =>
-        item.status === 'published'
-    ).length
-
-  const revisedDraftCount =
-    schedules.filter((item) => {
-      if (
-        item.status !== 'draft' ||
-        !item.current_version_id
-      ) {
-        return false
-      }
-
-      const versions =
-        item.schedule_versions || []
-
-      const currentVersion =
-        versions.find(
-          (version: any) =>
-            version.id ===
-            item.current_version_id
-        )
-
-      return Boolean(
-        currentVersion?.change_reason
-      )
-    }).length
-
-  const blockingIssues =
-    unresolvedLogs.length
-
-  const message =
-    errorMessage(
-      p.error,
-      p.details,
-      p.count
-    )
-
-  return (
     <>
-      {/* =====================================================
-          PAGE HEADER
-      ====================================================== */}
-
       <PageHead
-        eyebrow="REVIEW • VALIDATE • SUBMIT"
         title="Schedules"
-        description="Review generated and revised department schedules before submitting them for Super Admin review. Final publication and student Code/QR distribution remain under the Super Admin."
+        description="One schedule per block. Fix any problems, then submit each draft; the Administrator reviews and publishes it."
+        actions={
+          <Link className="btn btn-primary" href="/scheduler/schedule-builder">
+            Open schedule builder
+          </Link>
+        }
       />
-
-      {/* =====================================================
-          STATS
-      ====================================================== */}
+      {loadError && (
+        <Notice tone="danger" title="Schedules could not be loaded.">
+          {loadError.message}
+        </Notice>
+      )}
+      {message && <Notice tone="danger">{message}</Notice>}
+      {p.success === 'submitted_for_review' && (
+        <Notice tone="success" title="Submitted.">
+          The Administrator can now review and publish this schedule. It can no longer be edited
+          here.
+        </Notice>
+      )}
 
       <div className="stats-grid">
-        <Stat
-          label="Schedule Records"
-          value={schedules.length}
-        />
-
         <Stat
           label="Drafts"
           value={draftCount}
+          hint={revisedDraftCount ? `${revisedDraftCount} revised after a request` : undefined}
         />
-
-        <Stat
-          label="Revised Drafts"
-          value={revisedDraftCount}
-        />
-
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-        <Stat
-          label="Blocking Issues"
-          value={blockingIssues}
-          hint="Unresolved validation blockers"
-        />
-<<<<<<< HEAD
-        <Stat label="Submitted" value={submittedCount} />
+        <Stat label="With problems" value={blockingIssues} />
+        <Stat label="Waiting for Administrator" value={submittedCount} />
         <Stat label="Published" value={publishedCount} />
       </div>
-      {/* =====================================================
-          ERRORS
-      ====================================================== */}
-      {loadError && (
-        <div className="form-alert error">Unable to load schedules: {loadError.message}</div>
-      )}
-      {message && <div className="form-alert error">{message}</div>}
-      {/* =====================================================
-          SUCCESS
-      ====================================================== */}
-      {p.success === 'submitted_for_review' && (
-        <div className="form-alert success">
-          Schedule submitted for Super Admin review. The Department Scheduler can no longer edit the
-          submitted version unless it returns to the controlled revision workflow.
-        </div>
-      )}
-      {/* =====================================================
-          WORKFLOW NOTE
-      ====================================================== */}
-      <section className="panel scheduler-note">
-        <div>
-          <p className="eyebrow">DEPARTMENT WORKFLOW</p>
-          <h2>Review before submission</h2>
-          <p className="muted">
-            Generated schedules and approved faculty alterations remain working drafts while being
-            reviewed by the Department Scheduler. Resolve all blocking conflicts before submitting
-            the current version for Super Admin review.
-          </p>
-        </div>
-        <div className="top-actions">
-          <Link className="btn btn-outline" href="/scheduler/alterations">
-            Alteration Requests
-          </Link>
-          <Link className="btn btn-outline" href="/scheduler/schedule-builder">
-=======
 
-        <Stat
-          label="Submitted"
-          value={submittedCount}
-        />
-
-        <Stat
-          label="Published"
-          value={publishedCount}
-        />
-      </div>
-
-      {/* =====================================================
-          ERRORS
-      ====================================================== */}
-
-      {loadError && (
-        <div className="form-alert error">
-          Unable to load schedules:{' '}
-          {loadError.message}
-        </div>
-      )}
-
-      {message && (
-        <div className="form-alert error">
-          {message}
-        </div>
-      )}
-
-      {/* =====================================================
-          SUCCESS
-      ====================================================== */}
-
-      {p.success ===
-        'submitted_for_review' && (
-        <div className="form-alert success">
-          Schedule submitted for Super
-          Admin review. The Department
-          Scheduler can no longer edit the
-          submitted version unless it
-          returns to the controlled revision
-          workflow.
-        </div>
-      )}
-
-      {/* =====================================================
-          WORKFLOW NOTE
-      ====================================================== */}
-
-      <section className="panel scheduler-note">
-        <div>
-          <p className="eyebrow">
-            DEPARTMENT WORKFLOW
-          </p>
-
-          <h2>
-            Review before submission
-          </h2>
-
-          <p className="muted">
-            Generated schedules and
-            approved faculty alterations
-            remain working drafts while
-            being reviewed by the
-            Department Scheduler. Resolve
-            all blocking conflicts before
-            submitting the current version
-            for Super Admin review.
-          </p>
-        </div>
-
-        <div className="top-actions">
-          <Link
-            className="btn btn-outline"
-            href="/scheduler/alterations"
-          >
-            Alteration Requests
-          </Link>
-
-          <Link
-            className="btn btn-outline"
-            href="/scheduler/schedule-builder"
-          >
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-            Schedule Builder
-          </Link>
-        </div>
-      </section>
-<<<<<<< HEAD
-=======
-
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-      <section className="panel summary-panel">
-        <div className="panel-header">
-          <div>
-            <h3>Schedule readiness</h3>
-            <p>Current blockers reported by the schedule validation system.</p>
-          </div>
-        </div>
-<<<<<<< HEAD
-        <div className="readiness-grid">
-          {schedules.length ? (
-            schedules.slice(0, 5).map((item) => {
-              const currentVersionId = item.current_version_id
-              const logs = currentVersionId ? (unresolvedByVersion.get(currentVersionId) ?? []) : []
-              const blockerCount = logs.length
-=======
-
-        <div className="readiness-grid">
-          {schedules.length ? (
-            schedules.slice(0, 5).map((item) => {
-              const currentVersionId = item.current_version_id;
-              const logs = currentVersionId ? unresolvedByVersion.get(currentVersionId) ?? [] : [];
-              const blockerCount = logs.length;
-              const severity = logs.some((log) => log.severity === 'critical') ? 'critical' : logs.some((log) => log.severity === 'warning') ? 'warning' : 'info';
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-
-              return (
-                <div key={item.id} className="readiness-item">
-                  <div>
-                    <strong>{item.title || 'Untitled Schedule'}</strong>
-                    <div className="schedule-meta">
-<<<<<<< HEAD
-                      {one(item.programs)?.code || 'BSIT'} / {one(item.sections)?.code || '—'}
-                    </div>
-                  </div>
-                  <div className="readiness-status">
-                    <Badge tone={blockerCount > 0 ? 'danger' : 'success'}>
-                      {blockerCount > 0
-                        ? `${blockerCount} blocker${blockerCount === 1 ? '' : 's'}`
-                        : 'Ready'}
-=======
-                      {item.programs?.[0]?.code || 'BSIT'} / {item.sections?.[0]?.code || '—'}
-                    </div>
-                  </div>
-
-                  <div className="readiness-status">
-                    <Badge tone={blockerCount > 0 ? 'danger' : 'success'}>
-                      {blockerCount > 0 ? `${blockerCount} blocker${blockerCount === 1 ? '' : 's'}` : 'Ready'}
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-                    </Badge>
-                    {blockerCount > 0 && (
-                      <span className="readiness-copy">
-                        {logs[0]?.message || 'Unresolved validation issue'}
-                      </span>
-                    )}
-                  </div>
-                </div>
-<<<<<<< HEAD
-              )
-=======
-              );
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-            })
-          ) : (
-            <div className="readiness-empty">No schedules available for validation.</div>
-          )}
-        </div>
-      </section>
-<<<<<<< HEAD
-      {/* =====================================================
-          SCHEDULE TABLE
-      ====================================================== */}
-=======
-
-      {/* =====================================================
-          SCHEDULE TABLE
-      ====================================================== */}
-
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
       <section className="panel">
         {schedules.length ? (
-          <div className="table-wrap">
-            <DataTable>
-              <thead>
-                <tr>
-                  <th>Schedule</th>
-                  <th>Block</th>
-                  <th>Term</th>
-                  <th>Current Version</th>
-                  <th>Workflow</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-<<<<<<< HEAD
-              <tbody>
-                {schedules.map((item) => {
-                  const program = one(item.programs)
-                  const section = one(item.sections)
-                  const semester = one(item.semesters)
-                  const versions = item.schedule_versions ?? []
+          <DataTable minWidth={900}>
+            <thead>
+              <tr>
+                <th>Schedule</th>
+                <th>Version</th>
+                <th>Stage</th>
+                <th>Check</th>
+                <th aria-label="Actions" />
+              </tr>
+            </thead>
+            <tbody>
+              {schedules.map((item) => {
+                const program = one(item.programs)
+                const section = one(item.sections)
+                const semester = one(item.semesters)
+                const versions = item.schedule_versions ?? []
+                const currentVersion = versions.find(
+                  (version) => version.id === item.current_version_id
+                )
+                const isRevision = isRevisionNote(currentVersion?.change_reason)
+                const problems = currentVersion?.id
+                  ? (unresolvedByVersion.get(currentVersion.id) ?? [])
+                  : []
 
-                  const currentVersion = versions.find(
-                    (version) => version.id === item.current_version_id
-                  )
+                const stage =
+                  item.status === 'submitted'
+                    ? { label: 'Waiting for Administrator', tone: 'warning' as const, note: '' }
+                    : item.status === 'published'
+                      ? { label: 'Published', tone: 'success' as const, note: '' }
+                      : item.status === 'archived'
+                        ? { label: 'Archived', tone: 'default' as const, note: '' }
+                        : isRevision
+                          ? {
+                              label: 'Revised draft',
+                              tone: 'info' as const,
+                              note: currentVersion?.change_reason ?? '',
+                            }
+                          : { label: 'Draft', tone: 'info' as const, note: '' }
 
-                  const editable = item.status === 'draft'
-                  const isRevision = Boolean(currentVersion?.change_reason)
-
-                  const validationEntries = currentVersion?.id
-                    ? (unresolvedByVersion.get(currentVersion.id) ?? [])
-                    : []
-
-                  const readinessTone = validationEntries.length > 0 ? 'danger' : 'success'
-
-                  return (
-                    <tr key={item.id}>
-                      {/* ===============================
-                            SCHEDULE
-                        =============================== */}
-                      <td>
-                        <strong>{item.title || 'Untitled Schedule'}</strong>
-                        <div className="schedule-meta">
-                          Updated{' '}
-                          {item.updated_at
-                            ? new Date(item.updated_at).toLocaleDateString('en-PH')
-                            : '—'}
-                        </div>
-                      </td>
-                      {/* ===============================
-                            BLOCK
-                        =============================== */}
-                      <td>
-                        {program?.code || 'BSIT'} / {section?.code || '—'}
-                      </td>
-                      {/* ===============================
-                            TERM
-                        =============================== */}
-                      <td>{semester?.name || '—'}</td>
-                      {/* ===============================
-                            CURRENT VERSION
-                        =============================== */}
-                      <td>
-                        {currentVersion ? (
-                          <div className="version-cell">
-                            <strong>V{currentVersion.version_number}</strong>
-                            <span>{currentVersion.status}</span>
-                          </div>
-                        ) : (
-                          '—'
-                        )}
-                      </td>
-                      {/* ===============================
-                            WORKFLOW
-                        =============================== */}
-                      <td>
-                        {item.status === 'submitted' ? (
-                          <div className="workflow-cell">
-                            <Badge>Admin Review</Badge>
-                            <span>Awaiting final review</span>
-                          </div>
-                        ) : item.status === 'published' ? (
-                          <div className="workflow-cell">
-                            <Badge>Official</Badge>
-                            <span>Published schedule</span>
-                          </div>
-                        ) : item.status === 'archived' ? (
-                          <div className="workflow-cell">
-                            <Badge>Archived</Badge>
-                            <span>Historical record</span>
-                          </div>
-                        ) : isRevision ? (
-                          <div className="workflow-cell">
-                            <Badge>Revised Draft</Badge>
-                            <span>{currentVersion?.change_reason || 'Approved alteration'}</span>
-                          </div>
-                        ) : (
-                          <div className="workflow-cell">
-                            <Badge>Generated Draft</Badge>
-                            <span>Initial working schedule</span>
-                          </div>
-                        )}
-                      </td>
-                      {/* ===============================
-                            STATUS
-                        =============================== */}
-                      <td>
-                        <div className="workflow-cell">
-                          <Badge tone={readinessTone}>
-                            {validationEntries.length > 0
-                              ? `${validationEntries.length} blocker${validationEntries.length === 1 ? '' : 's'}`
-                              : 'Ready'}
-                          </Badge>
-                          <span>
-                            {validationEntries.length > 0
-                              ? validationEntries[0]?.message || 'Unresolved validation issue'
-                              : 'No open validation blockers'}
-                          </span>
-                        </div>
-                      </td>
-                      {/* ===============================
-                            ACTIONS
-                        =============================== */}
-                      <td>
-                        <div className="action-row">
-                          {/* REVIEW DRAFT */}
-                          {editable && (
+                return (
+                  <tr key={item.id}>
+                    <td>
+                      <strong>{item.title || 'Untitled schedule'}</strong>
+                      <small>
+                        {program?.code || 'BSIT'} · Block {section?.code || '—'} ·{' '}
+                        {semester?.name || '—'}
+                      </small>
+                    </td>
+                    <td>
+                      {currentVersion ? `Version ${currentVersion.version_number}` : '—'}
+                      {item.updated_at && (
+                        <small>
+                          Updated {new Date(item.updated_at).toLocaleDateString('en-PH')}
+                        </small>
+                      )}
+                    </td>
+                    <td>
+                      <Badge tone={stage.tone}>{stage.label}</Badge>
+                      {stage.note && <small className={styles.note}>{stage.note}</small>}
+                    </td>
+                    <td>
+                      <Badge tone={problems.length ? 'danger' : 'success'}>
+                        {problems.length
+                          ? `${problems.length} problem${problems.length === 1 ? '' : 's'}`
+                          : 'No problems'}
+                      </Badge>
+                      {problems.length > 0 && (
+                        <small className={styles.note}>
+                          {problems[0]?.message || 'Unresolved validation issue'}
+                        </small>
+                      )}
+                    </td>
+                    <td>
+                      <div className={styles.actions}>
+                        {item.status === 'draft' && (
+                          <>
                             <Link
-                              className="btn btn-outline"
+                              className="btn btn-outline btn-sm"
                               href={`/scheduler/schedule-builder?schedule=${item.id}`}
                             >
                               Review
                             </Link>
-                          )}
-                          {/* EXCEL */}
-                          <a
-                            className="btn btn-outline"
-                            href={`/api/export/schedule/${item.id}?format=xlsx`}
-                          >
-                            Excel
-                          </a>
-                          {/* CSV */}
-                          <a
-                            className="btn btn-outline"
-                            href={`/api/export/schedule/${item.id}?format=csv`}
-                          >
-                            CSV
-                          </a>
-                          {/* SUBMIT */}
-                          {item.status === 'draft' ? (
                             <form action={submitScheduleForAdminReview}>
                               <input type="hidden" name="schedule_id" value={item.id} />
-                              <button className="btn btn-primary" type="submit">
+                              <button className="btn btn-primary btn-sm" type="submit">
                                 Submit for Admin Review
                               </button>
                             </form>
-                          ) : item.status === 'submitted' ? (
-                            <span className="schedule-readonly submitted">
-                              Awaiting Admin Review
-                            </span>
-                          ) : item.status === 'published' ? (
-                            <span className="schedule-readonly">Published</span>
-                          ) : item.status === 'archived' ? (
-                            <span className="schedule-readonly">Archived</span>
-                          ) : (
-                            <span className="schedule-readonly">{item.status}</span>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  )
-                })}
-=======
-
-              <tbody>
-                {schedules.map(
-                  (item) => {
-                    const program =
-                      rel(
-                        item.programs
-                      )
-
-                    const section =
-                      rel(
-                        item.sections
-                      )
-
-                    const semester =
-                      rel(
-                        item.semesters
-                      )
-
-                    const versions:
-                      any[] =
-                      item.schedule_versions ||
-                      []
-
-                    const currentVersion =
-                      versions.find(
-                        (version) =>
-                          version.id ===
-                          item.current_version_id
-                      )
-
-                    const editable =
-                      item.status ===
-                      'draft'
-
-                    const isRevision =
-                      Boolean(
-                        currentVersion?.change_reason
-                      )
-
-                    const validationEntries =
-                      currentVersion?.id
-                        ? unresolvedByVersion.get(currentVersion.id) ?? []
-                        : []
-
-                    const readinessTone =
-                      validationEntries.length > 0
-                        ? 'danger'
-                        : 'success'
-
-                    return (
-                      <tr
-                        key={
-                          item.id
-                        }
-                      >
-                        {/* ===============================
-                            SCHEDULE
-                        =============================== */}
-
-                        <td>
-                          <strong>
-                            {item.title ||
-                              'Untitled Schedule'}
-                          </strong>
-
-                          <div className="schedule-meta">
-                            Updated{' '}
-                            {item.updated_at
-                              ? new Date(
-                                  item.updated_at
-                                ).toLocaleDateString(
-                                  'en-PH'
-                                )
-                              : '—'}
-                          </div>
-                        </td>
-
-                        {/* ===============================
-                            BLOCK
-                        =============================== */}
-
-                        <td>
-                          {program?.code ||
-                            'BSIT'}{' '}
-                          /{' '}
-                          {section?.code ||
-                            '—'}
-                        </td>
-
-                        {/* ===============================
-                            TERM
-                        =============================== */}
-
-                        <td>
-                          {semester?.name ||
-                            '—'}
-                        </td>
-
-                        {/* ===============================
-                            CURRENT VERSION
-                        =============================== */}
-
-                        <td>
-                          {currentVersion ? (
-                            <div className="version-cell">
-                              <strong>
-                                V
-                                {
-                                  currentVersion.version_number
-                                }
-                              </strong>
-
-                              <span>
-                                {
-                                  currentVersion.status
-                                }
-                              </span>
-                            </div>
-                          ) : (
-                            '—'
-                          )}
-                        </td>
-
-                        {/* ===============================
-                            WORKFLOW
-                        =============================== */}
-
-                        <td>
-                          {item.status ===
-                          'submitted' ? (
-                            <div className="workflow-cell">
-                              <Badge>
-                                Admin Review
-                              </Badge>
-
-                              <span>
-                                Awaiting final
-                                review
-                              </span>
-                            </div>
-                          ) : item.status ===
-                            'published' ? (
-                            <div className="workflow-cell">
-                              <Badge>
-                                Official
-                              </Badge>
-
-                              <span>
-                                Published
-                                schedule
-                              </span>
-                            </div>
-                          ) : item.status ===
-                            'archived' ? (
-                            <div className="workflow-cell">
-                              <Badge>
-                                Archived
-                              </Badge>
-
-                              <span>
-                                Historical
-                                record
-                              </span>
-                            </div>
-                          ) : isRevision ? (
-                            <div className="workflow-cell">
-                              <Badge>
-                                Revised Draft
-                              </Badge>
-
-                              <span>
-                                {currentVersion?.change_reason ||
-                                  'Approved alteration'}
-                              </span>
-                            </div>
-                          ) : (
-                            <div className="workflow-cell">
-                              <Badge>
-                                Generated Draft
-                              </Badge>
-
-                              <span>
-                                Initial working
-                                schedule
-                              </span>
-                            </div>
-                          )}
-                        </td>
-
-                        {/* ===============================
-                            STATUS
-                        =============================== */}
-
-                        <td>
-                          <div className="workflow-cell">
-                            <Badge tone={readinessTone}>
-                              {validationEntries.length > 0 ? `${validationEntries.length} blocker${validationEntries.length === 1 ? '' : 's'}` : 'Ready'}
-                            </Badge>
-                            <span>
-                              {validationEntries.length > 0
-                                ? validationEntries[0]?.message || 'Unresolved validation issue'
-                                : 'No open validation blockers'}
-                            </span>
-                          </div>
-                        </td>
-
-                        {/* ===============================
-                            ACTIONS
-                        =============================== */}
-
-                        <td>
-                          <div className="action-row">
-
-                            {/* REVIEW DRAFT */}
-
-                            {editable && (
-                              <Link
-                                className="btn btn-outline"
-                                href={`/scheduler/schedule-builder?schedule=${item.id}`}
-                              >
-                                Review
-                              </Link>
-                            )}
-
-                            {/* EXCEL */}
-
-                            <a
-                              className="btn btn-outline"
-                              href={`/api/export/schedule/${item.id}?format=xlsx`}
-                            >
-                              Excel
-                            </a>
-
-                            {/* CSV */}
-
-                            <a
-                              className="btn btn-outline"
-                              href={`/api/export/schedule/${item.id}?format=csv`}
-                            >
-                              CSV
-                            </a>
-
-                            {/* SUBMIT */}
-
-                            {item.status ===
-                            'draft' ? (
-                              <form
-                                action={
-                                  submitScheduleForAdminReview
-                                }
-                              >
-                                <input
-                                  type="hidden"
-                                  name="schedule_id"
-                                  value={
-                                    item.id
-                                  }
-                                />
-
-                                <button
-                                  className="btn btn-primary"
-                                  type="submit"
-                                >
-                                  Submit for
-                                  Admin Review
-                                </button>
-                              </form>
-                            ) : item.status ===
-                              'submitted' ? (
-                              <span className="schedule-readonly submitted">
-                                Awaiting Admin
-                                Review
-                              </span>
-                            ) : item.status ===
-                              'published' ? (
-                              <span className="schedule-readonly">
-                                Published
-                              </span>
-                            ) : item.status ===
-                              'archived' ? (
-                              <span className="schedule-readonly">
-                                Archived
-                              </span>
-                            ) : (
-                              <span className="schedule-readonly">
-                                {
-                                  item.status
-                                }
-                              </span>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    )
-                  }
-                )}
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
-              </tbody>
-            </DataTable>
-          </div>
+                          </>
+                        )}
+                        <a
+                          className="btn btn-ghost btn-sm"
+                          href={`/api/export/schedule/${item.id}?format=xlsx`}
+                        >
+                          Excel
+                        </a>
+                        <a
+                          className="btn btn-ghost btn-sm"
+                          href={`/api/export/schedule/${item.id}?format=csv`}
+                        >
+                          CSV
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </DataTable>
         ) : (
-          <Empty text="No schedules found. Generate a draft from Schedule Builder first." />
+          <Empty
+            title="No schedules yet"
+            text="Generate the schedule in the Schedule builder; it creates one draft per block."
+          />
         )}
       </section>
-<<<<<<< HEAD
-    </div>
-  )
-}
-=======
-
-      {/* =====================================================
-          LOCAL STYLES
-      ====================================================== */}
-
-      <style>{`
-        .scheduler-note {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 14px;
-          margin-bottom: 14px;
-        }
-
-        .scheduler-note h2 {
-          margin: 3px 0 4px;
-          font-size: 17px;
-        }
-
-        .scheduler-note p {
-          margin: 0;
-          max-width: 760px;
-          font-size: 12px;
-          line-height: 1.5;
-        }
-
-        .top-actions {
-          display: flex;
-          align-items: center;
-          gap: 7px;
-          flex-wrap: wrap;
-        }
-
-        .table-wrap {
-          width: 100%;
-          overflow-x: auto;
-        }
-
-        .data-table {
-          width: 100%;
-        }
-
-        .data-table th,
-        .data-table td {
-          padding-top: 9px;
-          padding-bottom: 9px;
-          vertical-align: middle;
-        }
-
-        .schedule-meta {
-          margin-top: 3px;
-          font-size: 10px;
-          color: var(--muted);
-        }
-
-        .version-cell {
-          display: grid;
-          gap: 2px;
-        }
-
-        .version-cell strong {
-          font-size: 12px;
-        }
-
-        .version-cell span {
-          font-size: 10px;
-          color: var(--muted);
-          text-transform: capitalize;
-        }
-
-        .workflow-cell {
-          display: grid;
-          gap: 5px;
-          max-width: 220px;
-        }
-
-        .workflow-cell span {
-          font-size: 10px;
-          line-height: 1.35;
-          color: var(--muted);
-        }
-
-        .summary-panel {
-          margin-bottom: 18px;
-        }
-
-        .readiness-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-          gap: 12px;
-        }
-
-        .readiness-item {
-          display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          gap: 12px;
-          padding: 12px 14px;
-          border: 1px solid var(--line);
-          border-radius: 10px;
-          background: rgba(255, 255, 255, 0.02);
-        }
-
-        .readiness-status {
-          display: grid;
-          gap: 6px;
-          justify-items: end;
-          text-align: right;
-        }
-
-        .readiness-copy {
-          font-size: 10px;
-          line-height: 1.4;
-          color: var(--muted);
-          max-width: 180px;
-        }
-
-        .readiness-empty {
-          font-size: 12px;
-          color: var(--muted);
-          padding: 8px 0;
-        }
-
-        .action-row {
-          display: flex;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: 6px;
-        }
-
-        .action-row form {
-          margin: 0;
-        }
-
-        .action-row .btn,
-        .top-actions .btn {
-          min-height: 32px;
-          padding: 6px 10px;
-          font-size: 11px;
-          white-space: nowrap;
-        }
-
-        .schedule-readonly {
-          display: inline-flex;
-          align-items: center;
-          min-height: 32px;
-          padding: 5px 9px;
-          border: 1px solid var(--line);
-          border-radius: 8px;
-          font-size: 10px;
-          font-weight: 700;
-          color: var(--muted);
-          white-space: nowrap;
-        }
-
-        .schedule-readonly.submitted {
-          font-weight: 800;
-        }
-
-        @media (max-width: 900px) {
-          .data-table {
-            min-width: 920px;
-          }
-        }
-
-        @media (max-width: 760px) {
-          .scheduler-note {
-            align-items: stretch;
-            flex-direction: column;
-          }
-
-          .top-actions {
-            width: 100%;
-          }
-
-          .top-actions .btn {
-            width: fit-content;
-          }
-
-          .action-row {
-            min-width: 190px;
-          }
-        }
-      `}</style>
     </>
   )
 }
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf

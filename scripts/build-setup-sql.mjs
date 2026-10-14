@@ -14,6 +14,7 @@ const MIGRATIONS = [
   'AlterSched_V6_Fixes',
   'AlterSched_V7_Assignments',
   'AlterSched_V8_Scheduling_Settings',
+  'AlterSched_V9_Instructor_Self_Service',
 ]
 
 const header = `-- ============================================================================

@@ -30,7 +30,7 @@
 
 .scope :global(.eyebrow) {
   color: #2563eb;
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 900;
   letter-spacing: 0.12em;
 }
@@ -67,7 +67,7 @@
   display: block;
   margin-top: 3px;
   color: var(--muted);
-  font-size: 10.5px;
+  font-size: 12px;
 }
 
 .scope :global(.statusBadge) {
@@ -89,12 +89,12 @@
 .scope :global(.sheetSelector strong) {
   display: block;
   color: #0f172a;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .scope :global(.sheetSelector span) {
   color: var(--muted);
-  font-size: 10.5px;
+  font-size: 12px;
 }
 
 .scope :global(.sheetTabs) {
@@ -109,7 +109,7 @@
   padding: 7px 10px;
   background: #ffffff;
   color: #475569;
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 800;
   text-decoration: none;
 }
@@ -131,13 +131,13 @@
   display: block;
   margin-bottom: 3px;
   color: #1e40af;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .scope :global(.noticeCard p) {
   margin: 0;
   color: #1d4ed8;
-  font-size: 11.5px;
+  font-size: 12.5px;
   line-height: 1.5;
 }
 
@@ -168,7 +168,7 @@
 .scope :global(.cardHeader p) {
   margin: 0;
   color: var(--muted);
-  font-size: 11.5px;
+  font-size: 12.5px;
 }
 
 .scope :global(.headerOption) {
@@ -176,7 +176,7 @@
   align-items: center;
   gap: 6px;
   color: #475569;
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -209,7 +209,7 @@
   display: block;
   margin-bottom: 3px;
   color: var(--muted-2);
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 900;
 }
 
@@ -217,7 +217,7 @@
   display: block;
   overflow: hidden;
   color: #0f172a;
-  font-size: 11px;
+  font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -231,7 +231,7 @@
   border-radius: 6px;
   background: #e2e8f0;
   color: #475569;
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 900;
 }
 
@@ -246,7 +246,7 @@
   display: block;
   margin-bottom: 4px;
   color: #475569;
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 800;
 }
 
@@ -258,7 +258,7 @@
   padding: 0 8px;
   background: #ffffff;
   color: #0f172a;
-  font-size: 11.5px;
+  font-size: 12.5px;
   outline: none;
 }
 
@@ -275,7 +275,7 @@
 
 .scope :global(.samples > span) {
   color: var(--muted-2);
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 900;
 }
 
@@ -285,7 +285,7 @@
   padding: 4px 6px;
   background: #ffffff;
   color: #475569;
-  font-size: 10.5px;
+  font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -320,13 +320,13 @@
   display: block;
   margin-bottom: 3px;
   color: #0f172a;
-  font-size: 11.5px;
+  font-size: 12.5px;
 }
 
 .scope :global(.optionItem span) {
   display: block;
   color: var(--muted);
-  font-size: 10.5px;
+  font-size: 12px;
   line-height: 1.45;
 }
 
@@ -340,13 +340,13 @@
 
 .scope :global(.actionCard strong) {
   color: #0f172a;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .scope :global(.actionCard p) {
   margin: 2px 0 0;
   color: var(--muted);
-  font-size: 10.5px;
+  font-size: 12px;
 }
 
 .scope :global(.actions) {
@@ -363,7 +363,7 @@
   justify-content: center;
   border-radius: 9px;
   padding: 0 13px;
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 900;
   text-decoration: none;
 }
@@ -416,7 +416,7 @@
 .scope :global(.emptyCard p) {
   margin: 0 0 15px;
   color: var(--muted);
-  font-size: 11.5px;
+  font-size: 12.5px;
 }
 
 @media (max-width: 1050px) {

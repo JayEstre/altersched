@@ -148,14 +148,14 @@
 
 .scope :global(.detail-label) {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   margin-bottom: 7px;
 }
 
 .scope :global(.detail-hint) {
   margin-top: 7px;
   margin-bottom: 0;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .scope :global(.gap-18) {
@@ -171,7 +171,7 @@
 .scope :global(.small-text) {
   margin-top: 8px;
   margin-bottom: 0;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .scope :global(.split-row) {

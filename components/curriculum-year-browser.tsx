@@ -51,7 +51,6 @@ export function CurriculumYearBrowser({ rows, curriculumName }: CurriculumYearBr
     <section className="panel as-browser">
       <div className="as-browser-header">
         <div>
-          <p className="eyebrow">CURRICULUM BY YEAR</p>
           <h2>Browse Subjects</h2>
           <p className="muted">{curriculumName} · Select a year and semester</p>
         </div>

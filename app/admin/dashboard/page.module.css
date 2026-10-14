@@ -1,0 +1,149 @@
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 20px;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.head a {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.tasks {
+  display: grid;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tasks li {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+
+.tasks li:first-child {
+  border-top: 0;
+}
+
+.tasks li div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.tasks li div span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.count {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--gold-soft);
+  color: #7a5a10;
+  font-size: 16px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.clear {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 0 4px;
+  color: var(--success);
+  font-weight: 600;
+}
+
+.recent {
+  display: grid;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.recent li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 10px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+
+.recent li:first-child {
+  border-top: 0;
+}
+
+.recent a {
+  overflow: hidden;
+  color: var(--text);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recent small {
+  grid-row: 2;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.recent :global(.pill) {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  align-self: center;
+}
+
+.setup {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  border-color: #f0d49c;
+  background: var(--warning-soft);
+  color: #6f420a;
+}
+
+.setup div {
+  display: grid;
+}
+
+@media (max-width: 960px) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .tasks li {
+    grid-template-columns: 40px minmax(0, 1fr);
+  }
+
+  .tasks li > :global(.btn) {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .setup {
+    grid-template-columns: 24px minmax(0, 1fr);
+  }
+
+  .setup > :global(.btn) {
+    grid-column: 2;
+    justify-self: start;
+  }
+}

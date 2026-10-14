@@ -549,7 +549,6 @@ export async function saveSchedulePreviewEntries(updates: SchedulePreviewUpdate[
 
   revalidatePath('/scheduler/schedule-builder')
   revalidatePath('/scheduler/schedules')
-  revalidatePath('/scheduler/my-schedule')
   revalidatePath('/faculty/schedule')
   revalidatePath('/scheduler/class-offerings')
   revalidatePath('/admin/class-offerings')

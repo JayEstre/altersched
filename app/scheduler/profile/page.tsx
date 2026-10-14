@@ -1,28 +1,44 @@
-<<<<<<< HEAD
 import { requireRole } from '@/lib/auth/require-role'
+import { createClient } from '@/lib/supabase/server'
 import { PageHead } from '@/components/ui'
+import { ProfileCard } from '@/components/profile-card'
+import { one } from '@/lib/relations'
+
 export default async function Page() {
   const { profile, user } = await requireRole(['department_scheduler'])
+  const supabase = await createClient()
+  const [{ data: departments }, { data: faculty }] = await Promise.all([
+    supabase
+      .from('scheduler_departments')
+      .select('department_id, departments(code, name)')
+      .eq('profile_id', profile.id)
+      .eq('active', true),
+    supabase
+      .from('faculty_profiles')
+      .select('employee_id')
+      .eq('profile_id', profile.id)
+      .maybeSingle(),
+  ])
+  const departmentNames = (departments ?? [])
+    .map((row) => one(row.departments))
+    .filter(Boolean)
+    .map((department) => `${department!.name} (${department!.code})`)
+
   return (
     <>
-      <PageHead
-        eyebrow="ACCOUNT"
-        title="Profile"
-        description="Your AlterSched scheduler account."
+      <PageHead title="Profile" description="Your account and the departments you schedule." />
+      <ProfileCard
+        name={profile.full_name || 'Department Scheduler'}
+        email={user.email}
+        role="Department Scheduler"
+        details={[
+          { label: 'Employee ID', value: faculty?.employee_id || '—' },
+          {
+            label: departmentNames.length > 1 ? 'Departments' : 'Department',
+            value: departmentNames.join(', ') || 'None assigned yet',
+          },
+        ]}
       />
-      <div className="panel">
-        <h3>{profile.full_name}</h3>
-        <p className="muted">{user.email}</p>
-        <p>
-          <span className="pill">{profile.role}</span>
-        </p>
-      </div>
     </>
   )
 }
-=======
-import {requireRole} from '@/lib/auth/require-role';
-import {PageHead} from '@/components/ui'
-export default async function Page(){const {profile,user}=await requireRole(['department_scheduler']);
-return <><PageHead eyebrow="ACCOUNT" title="Profile" description="Your AlterSched scheduler account."/><div className="panel"><h3>{profile.full_name}</h3><p className="muted">{user.email}</p><p><span className="pill">{profile.role}</span></p></div></>}
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf

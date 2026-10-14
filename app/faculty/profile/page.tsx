@@ -1,39 +1,40 @@
-<<<<<<< HEAD
 import { requireRole } from '@/lib/auth/require-role'
 import { createClient } from '@/lib/supabase/server'
 import { PageHead } from '@/components/ui'
+import { ProfileCard } from '@/components/profile-card'
 import { one } from '@/lib/relations'
+import { humanize } from '@/lib/format'
+
 export default async function Page() {
   const { profile, user } = await requireRole(['faculty'])
-  const s = await createClient()
-  const { data } = await s
+  const supabase = await createClient()
+  const { data } = await supabase
     .from('faculty_profiles')
-    .select('employee_id,employment_type,max_teaching_load,departments(code,name)')
+    .select('employee_id, employment_type, max_teaching_load, departments(code, name)')
     .eq('profile_id', profile.id)
     .maybeSingle()
+  const department = one(data?.departments)
+
   return (
     <>
-      <PageHead
-        eyebrow="ACCOUNT"
-        title="Profile"
-        description="Your faculty account and academic assignment."
+      <PageHead title="Profile" description="Your account and teaching record." />
+      <ProfileCard
+        name={profile.full_name || 'Instructor'}
+        email={user.email}
+        role="Instructor"
+        details={[
+          { label: 'Employee ID', value: data?.employee_id || '—' },
+          {
+            label: 'Department',
+            value: department ? `${department.name} (${department.code})` : '—',
+          },
+          { label: 'Employment', value: humanize(data?.employment_type, 'Not specified') },
+          {
+            label: 'Maximum teaching load',
+            value: data?.max_teaching_load ? `${data.max_teaching_load} hours per week` : 'Not set',
+          },
+        ]}
       />
-      <div className="panel">
-        <h3>{profile.full_name}</h3>
-        <p className="muted">{user.email}</p>
-        <p>Employee ID: {data?.employee_id || '—'}</p>
-        <p>Department: {one(data?.departments)?.name || '—'}</p>
-        <p>Employment: {data?.employment_type || '—'}</p>
-      </div>
     </>
   )
 }
-=======
-import {requireRole} from '@/lib/auth/require-role';
-import {createClient} from '@/lib/supabase/server';
-import {PageHead} from '@/components/ui'
-export default async function Page(){const {profile,user}=await requireRole(['faculty']);
-const s=await createClient();
-const {data}=await s.from('faculty_profiles').select('employee_id,employment_type,max_teaching_load,departments(code,name)').eq('profile_id',profile.id).maybeSingle();
-return <><PageHead eyebrow="ACCOUNT" title="Profile" description="Your faculty account and academic assignment."/><div className="panel"><h3>{profile.full_name}</h3><p className="muted">{user.email}</p><p>Employee ID: {data?.employee_id||'—'}</p><p>Department: {(data as any)?.departments?.[0]?.name||'—'}</p><p>Employment: {data?.employment_type||'—'}</p></div></>}
->>>>>>> 64bbe35105f1f6c5ed950e8e05ea24299def12bf
